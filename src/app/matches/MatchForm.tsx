@@ -112,8 +112,8 @@ export default function MatchForm({ players }: { players: Player[] }) {
 
       <button
         type="submit"
-        className="btn btn-primary btn-block"
-        style={{ marginTop: 8 }}
+        className="btn btn-accent"
+        style={{ display: "block", margin: "12px auto 0" }}
       >
         Add match
       </button>

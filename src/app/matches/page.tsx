@@ -24,18 +24,23 @@ export default async function MatchesPage() {
 
   return (
     <main className="app">
-      <div className="topbar">
-        <div className="logo">
-          RAILBIRD<span>.</span>
-        </div>
-        <a className="nav-link" href="/dashboard">
-          ← Dashboard
-        </a>
-      </div>
+      <h1 style={{ marginBottom: 16 }}>Matches</h1>
 
-      <div className="card" style={{ marginTop: 18 }}>
+      <div className="card">
         <div className="section-title">Log a match</div>
         <MatchForm players={players ?? []} />
+      </div>
+
+      <div className="section-title" style={{ marginTop: 28 }}>
+        Match history
+      </div>
+      {!matches?.length && (
+        <p className="muted">No matches yet. Log your first above.</p>
+      )}
+      <div className="match-grid">
+        {matches?.map((m) => (
+          <MatchRow key={m.id} m={m} />
+        ))}
       </div>
     </main>
   );

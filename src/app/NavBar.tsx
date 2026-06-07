@@ -23,8 +23,9 @@ export default async function NavBar() {
         <a className="nav-link" href="/team">
           Teams
         </a>
-        <a className="nav-link" href="/history">
-          History
+
+        <a className="nav-link" href="/settings">
+          Settings
         </a>
 
         <form action={logout} style={{ display: "inline" }}>

@@ -6,7 +6,9 @@ import {
   deletePlayer,
   deleteTeam,
 } from "@/lib/actions/roster";
+import { playerCard } from "@/lib/playerCard";
 import type { Team, Player } from "@/lib/types";
+import type { Match } from "@/lib/ratings";
 
 export default async function TeamPage() {
   const supabase = await createClient();
@@ -23,9 +25,14 @@ export default async function TeamPage() {
     .select("*")
     .order("created_at")
     .returns<Player[]>();
+  const { data: matches } = await supabase
+    .from("matches")
+    .select("*")
+    .returns<Match[]>();
 
   const teamList = teams ?? [];
   const playerList = players ?? [];
+  const matchList = matches ?? [];
   const playersFor = (teamId: string | null) =>
     playerList.filter((p) => p.team_id === teamId);
 
@@ -35,82 +42,109 @@ export default async function TeamPage() {
         No players.
       </p>
     ) : (
-      <div>
-        {list.map((p) => (
-          <div key={p.id} className="row">
-            <span>
-              {p.name} · {p.default_system === "apa8" ? "APA" : "Fargo"}
-            </span>
-            <form action={deletePlayer}>
-              <input type="hidden" name="id" value={p.id} />
-              <button type="submit" className="btn btn-danger btn-sm">
-                ✕
-              </button>
-            </form>
-          </div>
-        ))}
+      <div className="match-grid" style={{ marginTop: 10 }}>
+        {list.map((p) => {
+          const c = playerCard(p, matchList);
+          return (
+            <div
+              key={p.id}
+              className="mcard"
+              style={{
+                ["--glow" as string]: c.glow,
+                ["--accent" as string]: c.accent,
+              }}
+            >
+              <div className="mc-top">
+                <span>{c.system}</span>
+                <form action={deletePlayer}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <button
+                    type="submit"
+                    style={{
+                      background: "none",
+                      border: 0,
+                      color: "var(--muted)",
+                      cursor: "pointer",
+                      fontSize: 13,
+                    }}
+                  >
+                    Remove
+                  </button>
+                </form>
+              </div>
+              <div className="mc-title">{p.name}</div>
+              <div className="mc-sub">{c.metricLabel}</div>
+              <div className="mc-barlabel">
+                <span>Performance</span>
+                <span>{c.value}</span>
+              </div>
+              <div className="mc-track">
+                <div className="mc-fill" style={{ width: `${c.pct}%` }} />
+              </div>
+              <div className="mc-foot">
+                <span className="chip">{c.detail}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
 
   return (
     <main className="app">
-      <div className="topbar">
-        <div className="logo">
-          RAILBIRD<span>.</span>
+      <h1 style={{ marginBottom: 16 }}>Teams &amp; players</h1>
+
+      <div className="grid-2">
+        <div className="card">
+          <div className="section-title">Add a team</div>
+          <form action={createTeam}>
+            <input
+              name="name"
+              placeholder="Team name"
+              required
+              className="field"
+            />
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              style={{ marginTop: 8 }}
+            >
+              Add team
+            </button>
+          </form>
         </div>
-        <a className="nav-link" href="/dashboard">
-          ← Dashboard
-        </a>
-      </div>
 
-      <div className="card" style={{ marginTop: 18 }}>
-        <div className="section-title">Add a team</div>
-        <form action={createTeam}>
-          <input
-            name="name"
-            placeholder="Team name"
-            required
-            className="field"
-          />
-          <button
-            type="submit"
-            className="btn btn-primary btn-block"
-            style={{ marginTop: 8 }}
-          >
-            Add team
-          </button>
-        </form>
-      </div>
-
-      <div className="card">
-        <div className="section-title">Add a player</div>
-        <form action={createPlayer}>
-          <input
-            name="name"
-            placeholder="Player name"
-            required
-            className="field"
-          />
-          <select name="team_id" defaultValue="" className="field">
-            <option value="">No team</option>
-            {teamList.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-          <select name="default_system" defaultValue="apa8" className="field">
-            <option value="apa8">APA 8-Ball</option>
-            <option value="fargo">FargoRate</option>
-          </select>
-          <button
-            type="submit"
-            className="btn btn-primary btn-block"
-            style={{ marginTop: 8 }}
-          >
-            Add player
-          </button>
-        </form>
+        <div className="card">
+          <div className="section-title">Add a player</div>
+          <form action={createPlayer}>
+            <input
+              name="name"
+              placeholder="Player name"
+              required
+              className="field"
+            />
+            <select name="team_id" defaultValue="" className="field">
+              <option value="">No team</option>
+              {teamList.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+            <select name="default_system" defaultValue="apa8" className="field">
+              <option value="apa8">APA 8-Ball</option>
+              <option value="apa9">APA 9-Ball</option>
+              <option value="fargo">FargoRate</option>
+            </select>
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              style={{ marginTop: 8 }}
+            >
+              Add player
+            </button>
+          </form>
+        </div>
       </div>
 
       <div className="card">
@@ -121,7 +155,7 @@ export default async function TeamPage() {
         )}
 
         {teamList.map((t) => (
-          <div key={t.id} style={{ marginBottom: 18 }}>
+          <div key={t.id} style={{ marginBottom: 24 }}>
             <div
               style={{
                 display: "flex",

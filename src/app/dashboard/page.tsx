@@ -31,6 +31,14 @@ export default async function Dashboard({
   const { data: claims } = await supabase.auth.getClaims();
   if (!claims?.claims) redirect("/login");
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name")
+    .eq("id", claims.claims.sub)
+    .single<{ display_name: string | null }>();
+
+  const firstName = (profile?.display_name ?? "").trim().split(" ")[0];
+
   const { data: players } = await supabase
     .from("players")
     .select("*")
@@ -59,20 +67,20 @@ export default async function Dashboard({
 
   return (
     <main className="app">
-      <div className="topbar">
-        <div className="logo">
-          RAILBIRD<span>.</span>
-        </div>
-        <form action={logout}>
-          <button className="btn btn-sm">Log out</button>
-        </form>
-      </div>
-
-      <div style={{ margin: "14px 0 18px" }}>
-        <a className="nav-link" href="/matches">
-          + Log a match
+      <h1 style={{ marginBottom: 4 }}>
+        {firstName ? `Welcome back, ${firstName}` : "Welcome back"}
+      </h1>
+      <p className="muted" style={{ marginBottom: 18 }}>
+        Here&apos;s how you&apos;re playing.
+      </p>
+      <div
+        style={{ display: "flex", gap: 10, marginBottom: 18, flexWrap: "wrap" }}
+      >
+        <a href="/matches" className="btn btn-accent">
+          Log a match
         </a>
-        <a className="nav-link" href="/team">
+
+        <a href="/team" className="btn btn-accent">
           Teams &amp; players
         </a>
       </div>

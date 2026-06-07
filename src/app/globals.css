@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --felt: #0c3b2e;
-  --felt-deep: #072a20;
-  --cream: #f4efe1;
-  --cue-yellow: #f4c542;
-  --chalk: #1f6f8b;
-  --red: #d4453a;
-  --muted: #9db5a8;
-  --line: rgba(244, 239, 225, 0.12);
+  --bg-top: #0a0d18;
+  --cream: #eaf0f6;
+  --blue: #2323ff;
+  --blue-soft: #4d6bff;
+  --ice: #7fa8ff;
+  --red: #ff4d57;
+  --muted: #7c869b;
+  --line: rgba(120, 150, 255, 0.14);
+  --cue-yellow: var(--blue);
+  --chalk: var(--blue);
+  --felt: #0a0d18;
 }
 
 body {
-  background: linear-gradient(180deg, #0c3b2e 0%, #07271d 50%, #000000 100%);
+  background: linear-gradient(180deg, #0a0d18 0%, #05060c 55%, #000000 100%);
   background-attachment: fixed;
   color: var(--cream);
   min-height: 100vh;
@@ -68,8 +71,8 @@ h2 {
 .card {
   background: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(0, 0, 0, 0.18)
+    rgba(120, 150, 255, 0.06),
+    rgba(0, 0, 0, 0.3)
   );
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -138,22 +141,16 @@ h2 {
 select.field {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23f4c542' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234d6bff' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 34px;
 }
 
-.btn {
-  cursor: pointer;
-  border: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--cream);
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-family: "Barlow", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
 }
 .btn:hover {
   border-color: var(--muted);
@@ -296,23 +293,23 @@ a:hover {
   border-radius: 18px;
   padding: 18px;
   overflow: hidden;
-  background: #0e1a16;
+  background: #0c0f1a;
   border: 1px solid var(--line);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
 }
 .mcard::before {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 75%;
-  height: 62%;
+  width: 80%;
+  height: 65%;
   background: radial-gradient(
     120% 120% at 85% 0%,
     var(--glow) 0%,
     transparent 60%
   );
-  opacity: 0.55;
+  opacity: 0.6;
   pointer-events: none;
 }
 .mcard > * {
@@ -384,4 +381,20 @@ a:hover {
   background: rgba(0, 0, 0, 0.4);
   padding: 5px 12px;
   border-radius: 20px;
+}
+.btn-accent {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(77, 107, 255, 0.14);
+  border: 1px solid rgba(77, 107, 255, 0.45);
+  color: var(--ice);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+.btn-accent:hover {
+  background: rgba(77, 107, 255, 0.26);
+  border-color: rgba(77, 107, 255, 0.7);
+  text-decoration: none;
 }

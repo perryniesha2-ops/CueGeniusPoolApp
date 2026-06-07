@@ -12,4 +12,7 @@ export interface Player {
   name: string;
   default_system: string;
   created_at: string;
+  apa8_sl: number | null;
+  apa9_sl: number | null;
+  fargo_rating: number | null;
 }

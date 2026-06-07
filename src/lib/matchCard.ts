@@ -5,6 +5,9 @@ import { apa9SkillLevel } from "@/lib/ratings/apa9";
 import type { Match } from "@/lib/ratings";
 
 export function matchCard(m: Match) {
+  const glow = m.won ? "#2323ff" : "#ff4d57";
+  const accent = m.won ? "#4d6bff" : "#ff5e67";
+
   if (m.system === "apa9") {
     const score = apa9MatchScore(m);
     const sl = apa9SkillLevel(score);
@@ -13,8 +16,8 @@ export function matchCard(m: Match) {
       metricLabel: "Performance",
       value: `SL ${sl}`,
       pct: Math.min(100, (sl / 9) * 100),
-      glow: "#c08a2e",
-      accent: "#e0962e",
+      glow,
+      accent,
       detail: `${m.points_earned ?? 0} pts · ${m.innings ?? 0} inn`,
     };
   }
@@ -26,8 +29,8 @@ export function matchCard(m: Match) {
       metricLabel: "Games",
       value: `${won}–${lost}`,
       pct: won + lost > 0 ? (won / (won + lost)) * 100 : 0,
-      glow: "#2e6bc0",
-      accent: "#3273c4",
+      glow,
+      accent,
       detail: `vs ${m.opponent_rating ?? "?"}`,
     };
   }
@@ -39,8 +42,8 @@ export function matchCard(m: Match) {
     metricLabel: "Performance",
     value: `SL ${sl}`,
     pct: Math.min(100, (sl / 7) * 100),
-    glow: "#1f8b6f",
-    accent: "#3aa05a",
+    glow,
+    accent,
     detail: `${m.innings ?? 0} inn · ${m.safeties ?? 0} saf`,
   };
 }
