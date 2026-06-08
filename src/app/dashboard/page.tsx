@@ -68,9 +68,8 @@ export default async function Dashboard({
   const fargoSeries = fargoRatingSeries([...fargo].reverse());
   const nine = all.filter((m) => m.system === "apa9").slice(0, 10);
   const player9SL = playerList.find((p) => p.id === selectedId)?.apa9_sl ?? 4;
-
   const apa9Result = apa9Performance(nine, player9SL);
-  const apa9Series = apa9ScoreSeries([...nine].reverse(), player9SL);
+  const apa9Series = apa9ScoreSeries([...nine].reverse());
 
   return (
     <main className="app">

@@ -1,7 +1,6 @@
 import { apaMatchScore } from "@/lib/ratings/apa8";
-import { apa9MatchScore } from "@/lib/ratings/apa9";
+import { apa9PPI } from "@/lib/ratings/apa9";
 import { apaSkillLevel } from "@/lib/ratings/apa8";
-import { apa9SkillLevel } from "@/lib/ratings/apa9";
 import type { Match } from "@/lib/ratings";
 
 export function matchCard(m: Match, player9SL = 4) {
@@ -9,16 +8,15 @@ export function matchCard(m: Match, player9SL = 4) {
   const accent = m.won ? "#4d6bff" : "#ff5e67";
 
   if (m.system === "apa9") {
-    const score = apa9MatchScore(m, player9SL);
-    const sl = apa9SkillLevel(score);
+    const ppi = apa9PPI(m);
     return {
       system: "APA 9-Ball",
-      metricLabel: "Performance",
-      value: `SL ${sl}`,
-      pct: Math.min(100, (sl / 9) * 100),
-      glow,
-      accent,
+      metricLabel: "Points/inning",
+      value: ppi.toFixed(1),
+      pct: Math.min(100, (ppi / 4.6) * 100), // 4.6 PPI ≈ top of scale
       detail: `${m.points_earned ?? 0} pts · ${m.innings ?? 0} inn`,
+      glow: m.won ? "#2323ff" : "#ff4d57",
+      accent: m.won ? "#4d6bff" : "#ff5e67",
     };
   }
   if (m.system === "fargo") {

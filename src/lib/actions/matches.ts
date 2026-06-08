@@ -31,6 +31,7 @@ export async function createMatch(formData: FormData) {
   });
 
   revalidatePath("/matches");
+  revalidatePath("/dashboard");
 }
 
 export async function deleteMatch(formData: FormData) {
@@ -40,6 +41,7 @@ export async function deleteMatch(formData: FormData) {
     .delete()
     .eq("id", formData.get("id") as string);
   revalidatePath("/matches");
+  revalidatePath("/dashboard");
 }
 
 export async function updateMatch(formData: FormData) {
@@ -63,4 +65,5 @@ export async function updateMatch(formData: FormData) {
     .eq("id", formData.get("id") as string);
 
   revalidatePath("/matches");
+  revalidatePath("/dashboard");
 }

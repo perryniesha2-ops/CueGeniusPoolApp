@@ -19,6 +19,7 @@ export function playerCard(player: Player, allMatches: Match[]) {
       accent: "#6e5bff",
     };
   }
+
   if (player.default_system === "apa9") {
     const r = apa9Performance(mine, player.apa9_sl ?? 4);
     return {
@@ -31,6 +32,7 @@ export function playerCard(player: Player, allMatches: Match[]) {
       accent: "#22a8c4",
     };
   }
+
   const r = apaPerformance(mine);
   return {
     system: "APA 8-Ball",

@@ -405,9 +405,17 @@ a:hover {
 }
 
 .landing {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    #0a0d18 0%,
+    #05060c 55%,
+    #000 100%
+  );
 }
 .landing-hero {
   text-align: center;
@@ -445,17 +453,6 @@ a:hover {
   .landing-hero {
     padding: 50px 0 40px;
   }
-}
-.landing {
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-  background: radial-gradient(
-    120% 90% at 50% 0%,
-    #0a0d18 0%,
-    #05060c 55%,
-    #000 100%
-  );
 }
 
 .ghost {

@@ -1,61 +1,63 @@
 import type { MatchInput, ApaResult } from "./types";
 
-// APA 9-ball points needed to win, by skill level.
-export const NINE_BALL_TARGET: Record<number, number> = {
-  1: 14,
-  2: 19,
-  3: 25,
-  4: 31,
-  5: 38,
-  6: 46,
-  7: 55,
-  8: 65,
-  9: 75,
-};
+// Average points-per-inning thresholds for each 9-ball skill level.
+// Reverse-engineered approximation — calibrate against known players.
+const PPI_BANDS: { sl: number; min: number }[] = [
+  { sl: 9, min: 4.6 },
+  { sl: 8, min: 4.2 },
+  { sl: 7, min: 3.8 },
+  { sl: 6, min: 3.4 },
+  { sl: 5, min: 3.0 },
+  { sl: 4, min: 2.6 },
+  { sl: 3, min: 2.2 },
+  { sl: 2, min: 1.7 },
+  { sl: 1, min: 0 },
+];
 
-// Points per inning, scaled by how many points this player needed.
-// Returns a "fraction of target earned per inning."
-export function apa9MatchScore(m: MatchInput, playerSL: number): number {
+// One match's points per inning.
+export function apa9PPI(m: MatchInput): number {
   const innings = Math.max(1, m.innings ?? 0);
   const points = m.points_earned ?? 0;
-  const target = NINE_BALL_TARGET[playerSL] ?? NINE_BALL_TARGET[4];
-  return points / innings / target;
+  return points / innings;
 }
 
-// Map that scaled rate onto a performance skill level (1–9).
-// These bands are a starting calibration — tune once you have real data.
-export function apa9SkillLevel(scaledScore: number): number {
-  if (scaledScore >= 0.28) return 9;
-  if (scaledScore >= 0.24) return 8;
-  if (scaledScore >= 0.2) return 7;
-  if (scaledScore >= 0.16) return 6;
-  if (scaledScore >= 0.13) return 5;
-  if (scaledScore >= 0.1) return 4;
-  if (scaledScore >= 0.07) return 3;
-  if (scaledScore >= 0.04) return 2;
+// Map an average PPI onto a raw skill level (1–9).
+export function ppiToSkillLevel(ppi: number): number {
+  for (const band of PPI_BANDS) {
+    if (ppi >= band.min) return band.sl;
+  }
   return 1;
 }
 
+// Estimate performance SL, anchored to the player's current SL so a small,
+// noisy sample can't overreact. Averages the player's BEST games (top 7 of
+// the window) to mirror the APA's "rate your ceiling" philosophy.
 export function apa9Performance(
   matches: MatchInput[],
-  playerSL: number,
+  currentSL: number,
 ): ApaResult | null {
   const nine = matches.filter((m) => m.system === "apa9");
   if (nine.length === 0) return null;
-  const scores = nine.map((m) => apa9MatchScore(m, playerSL));
-  const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+
+  // Best games first, take the top 7 (or fewer if the window is small).
+  const ppis = nine.map(apa9PPI).sort((a, b) => b - a);
+  const best = ppis.slice(0, 7);
+  const avgPPI = best.reduce((a, b) => a + b, 0) / best.length;
+
+  const computedSL = ppiToSkillLevel(avgPPI);
+
+  // Confidence grows with sample size, capped so we never fully drop the anchor.
+  const w = Math.min(nine.length / 10, 1) * 0.7;
+  const blended = currentSL * (1 - w) + computedSL * w;
+
   return {
-    skillLevel: apa9SkillLevel(avg),
-    avgScore: Math.round(avg * 1000) / 1000,
+    skillLevel: Math.round(blended),
+    avgScore: Math.round(avgPPI * 100) / 100, // now reads as PPI
     sampleSize: nine.length,
   };
 }
 
-export function apa9ScoreSeries(
-  matches: MatchInput[],
-  playerSL: number,
-): number[] {
-  return matches
-    .filter((m) => m.system === "apa9")
-    .map((m) => apa9MatchScore(m, playerSL));
+// The PPI series for the trend line (chronological order in, as given).
+export function apa9ScoreSeries(matches: MatchInput[]): number[] {
+  return matches.filter((m) => m.system === "apa9").map(apa9PPI);
 }

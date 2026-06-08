@@ -8,17 +8,22 @@ export default async function LandingPage() {
 
   return (
     <main className="landing">
+      <header className="landing-bar">
+        <div className="logo" style={{ fontSize: 30 }}>
+          RAILBIRD<span>.</span>
+        </div>
+        <div className="landing-bar-actions">
+          <a href="/login" className="btn">
+            Log in
+          </a>
+          <a href="/signup" className="btn btn-primary">
+            Sign up
+          </a>
+        </div>
+      </header>
+
       <div className="ghost g8" />
       <div className="ghost g9" />
-
-      <div className="landing-corner">
-        <a href="/login" className="btn">
-          Log in
-        </a>
-        <a href="/login" className="btn btn-primary">
-          Sign up
-        </a>
-      </div>
 
       <div className="landing-hero">
         <div className="logo" style={{ fontSize: 76 }}>
