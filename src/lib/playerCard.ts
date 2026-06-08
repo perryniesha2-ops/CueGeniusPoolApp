@@ -20,7 +20,7 @@ export function playerCard(player: Player, allMatches: Match[]) {
     };
   }
   if (player.default_system === "apa9") {
-    const r = apa9Performance(mine);
+    const r = apa9Performance(mine, player.apa9_sl ?? 4);
     return {
       system: "APA 9-Ball",
       metricLabel: "Skill level",

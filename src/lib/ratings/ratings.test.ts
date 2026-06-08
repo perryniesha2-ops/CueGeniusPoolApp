@@ -16,6 +16,7 @@ function match(overrides: Partial<MatchInput>): MatchInput {
     fargo_lost: null,
     opponent_rating: null,
     points_earned: null,
+    opp_safeties: null,
     ...overrides,
   };
 }
@@ -94,24 +95,40 @@ describe("FargoRate", () => {
 });
 
 describe("APA 9-ball", () => {
-  it("scores a match as points earned per inning", () => {
-    // 30 points over 5 innings = 6.0
+  it("scores points per inning scaled by target", () => {
+    // SL4 target = 31. 20 points over 5 innings = 4 pts/inning. 4/31 ≈ 0.129 → SL5
     expect(
-      apa9MatchScore(match({ system: "apa9", points_earned: 30, innings: 5 })),
-    ).toBe(6);
+      apa9SkillLevel(
+        apa9MatchScore(
+          match({ system: "apa9", points_earned: 20, innings: 5 }),
+          4,
+        ),
+      ),
+    ).toBe(5);
   });
 
-  it("maps higher points-per-inning to higher skill", () => {
-    expect(apa9SkillLevel(14)).toBe(9);
-    expect(apa9SkillLevel(6)).toBe(5);
-    expect(apa9SkillLevel(1)).toBe(1);
+  it("judges players at different levels fairly", () => {
+    // Same raw rate, but a higher-SL player has a bigger target,
+    // so the same points/inning scales to a lower fraction.
+    const sl4 = apa9MatchScore(
+      match({ system: "apa9", points_earned: 31, innings: 5 }),
+      4,
+    ); // 6.2/31 = 0.20
+    const sl7 = apa9MatchScore(
+      match({ system: "apa9", points_earned: 31, innings: 5 }),
+      7,
+    ); // 6.2/55 ≈ 0.113
+    expect(sl4).toBeGreaterThan(sl7);
   });
 
   it("only counts 9-ball matches", () => {
-    const r = apa9Performance([
-      match({ system: "apa8", innings: 5 }),
-      match({ system: "apa9", points_earned: 40, innings: 5 }), // 8.0 → SL6
-    ]);
-    expect(r?.skillLevel).toBe(6);
+    const r = apa9Performance(
+      [
+        match({ system: "apa8", innings: 5 }),
+        match({ system: "apa9", points_earned: 31, innings: 5 }),
+      ],
+      4,
+    );
+    expect(r?.sampleSize).toBe(1);
   });
 });

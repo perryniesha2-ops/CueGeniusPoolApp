@@ -26,6 +26,7 @@ export async function createMatch(formData: FormData) {
     games_won: num(formData, "games_won"),
     fargo_won: num(formData, "fargo_won"),
     fargo_lost: num(formData, "fargo_lost"),
+    opp_safeties: num(formData, "opp_safeties"),
   });
 
   revalidatePath("/matches");
@@ -55,6 +56,7 @@ export async function updateMatch(formData: FormData) {
       games_won: num(formData, "games_won"),
       fargo_won: num(formData, "fargo_won"),
       fargo_lost: num(formData, "fargo_lost"),
+      opp_safeties: num(formData, "opp_safeties"),
     })
     .eq("id", formData.get("id") as string);
 

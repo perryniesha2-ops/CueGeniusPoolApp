@@ -5,7 +5,8 @@ export function apaMatchScore(m: MatchInput): number {
   const gamesWon = Math.max(1, m.games_won ?? 0);
   const innings = m.innings ?? 0;
   const safeties = m.safeties ?? 0;
-  return Math.max(0.1, (innings - safeties) / gamesWon);
+  const oppSafeties = m.opp_safeties ?? 0;
+  return Math.max(0.1, (innings - safeties - oppSafeties) / gamesWon);
 }
 
 // Map an average score onto an APA 8-ball skill level (2–7).

@@ -4,12 +4,12 @@ import { apaSkillLevel } from "@/lib/ratings/apa8";
 import { apa9SkillLevel } from "@/lib/ratings/apa9";
 import type { Match } from "@/lib/ratings";
 
-export function matchCard(m: Match) {
+export function matchCard(m: Match, player9SL = 4) {
   const glow = m.won ? "#2323ff" : "#ff4d57";
   const accent = m.won ? "#4d6bff" : "#ff5e67";
 
   if (m.system === "apa9") {
-    const score = apa9MatchScore(m);
+    const score = apa9MatchScore(m, player9SL);
     const sl = apa9SkillLevel(score);
     return {
       system: "APA 9-Ball",

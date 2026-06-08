@@ -12,6 +12,7 @@ export interface MatchInput {
   fargo_lost: number | null;
   opponent_rating: number | null;
   points_earned: number | null;
+  opp_safeties: number | null;
 }
 
 export interface ApaResult {
@@ -42,6 +43,7 @@ export interface Match {
   played_at: string;
   created_at: string;
   points_earned: number | null;
+  opp_safeties: number | null;
 }
 
 export interface Team {

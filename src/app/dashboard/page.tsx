@@ -10,6 +10,7 @@ import {
 } from "@/lib/ratings";
 import type { Player } from "@/lib/types";
 import Sparkline from "./Sparkline";
+import { apa9Performance, apa9ScoreSeries } from "@/lib/ratings";
 
 const ballColor = (sl: number) =>
   ({
@@ -64,6 +65,11 @@ export default async function Dashboard({
   const fargoResult = fargoPerformance(fargo);
   const apaSeries = apaScoreSeries([...apa].reverse());
   const fargoSeries = fargoRatingSeries([...fargo].reverse());
+  const nine = all.filter((m) => m.system === "apa9").slice(0, 10);
+  const player9SL = playerList.find((p) => p.id === selectedId)?.apa9_sl ?? 4;
+
+  const apa9Result = apa9Performance(nine, player9SL);
+  const apa9Series = apa9ScoreSeries([...nine].reverse(), player9SL);
 
   return (
     <main className="app">
@@ -133,6 +139,39 @@ export default async function Dashboard({
             </div>
           </div>
           <Sparkline values={apaSeries} invert />
+        </div>
+      )}
+      {apa9Result && (
+        <div className="card">
+          <div className="section-title">
+            APA 9-Ball · performance skill level
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              margin: "14px 0",
+            }}
+          >
+            <div
+              className="ball"
+              style={{
+                background:
+                  "radial-gradient(circle at 35% 30%, #22a8c4, #0e4a5e)",
+              }}
+            >
+              <div className="ball-num">{apa9Result.skillLevel}</div>
+            </div>
+            <div>
+              <div className="stat-big">SL {apa9Result.skillLevel}</div>
+              <div className="muted">
+                avg {apa9Result.avgScore} pts/inning · last{" "}
+                {apa9Result.sampleSize}
+              </div>
+            </div>
+          </div>
+          <Sparkline values={apa9Series} />
         </div>
       )}
 

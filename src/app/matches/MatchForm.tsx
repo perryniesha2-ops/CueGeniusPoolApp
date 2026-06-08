@@ -44,7 +44,7 @@ export default function MatchForm({ players }: { players: Player[] }) {
         type="number"
         className="field"
         placeholder={
-          system === "apa8" ? "Opponent skill level" : "Opponent Fargo rating"
+          system === "fargo" ? "Opponent Fargo rating" : "Opponent skill level"
         }
       />
 
@@ -53,13 +53,19 @@ export default function MatchForm({ players }: { players: Player[] }) {
           <input
             name="innings"
             type="number"
-            placeholder="Your innings"
+            placeholder="Total innings (from scoresheet)"
             className="field"
           />
           <input
             name="safeties"
             type="number"
             placeholder="Your safeties"
+            className="field"
+          />
+          <input
+            name="opp_safeties"
+            type="number"
+            placeholder="Opponent's safeties"
             className="field"
           />
           <input
