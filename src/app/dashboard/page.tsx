@@ -11,6 +11,7 @@ import {
 import type { Player } from "@/lib/types";
 import Sparkline from "./Sparkline";
 import { apa9Performance, apa9ScoreSeries } from "@/lib/ratings";
+import PoolBall from "./PoolBall";
 
 const ballColor = (sl: number) =>
   ({
@@ -125,12 +126,7 @@ export default async function Dashboard({
               margin: "14px 0",
             }}
           >
-            <div
-              className="ball"
-              style={{ background: ballColor(apaResult.skillLevel) }}
-            >
-              <div className="ball-num">{apaResult.skillLevel}</div>
-            </div>
+            <PoolBall kind="8" num={8} />
             <div>
               <div className="stat-big">SL {apaResult.skillLevel}</div>
               <div className="muted">
@@ -154,15 +150,7 @@ export default async function Dashboard({
               margin: "14px 0",
             }}
           >
-            <div
-              className="ball"
-              style={{
-                background:
-                  "radial-gradient(circle at 35% 30%, #22a8c4, #0e4a5e)",
-              }}
-            >
-              <div className="ball-num">{apa9Result.skillLevel}</div>
-            </div>
+            <PoolBall kind="9" num={9} />
             <div>
               <div className="stat-big">SL {apa9Result.skillLevel}</div>
               <div className="muted">
