@@ -11,7 +11,7 @@ export default async function NavBar() {
   return (
     <nav className="navbar">
       <a href="/dashboard" className="logo" style={{ fontSize: 28 }}>
-        RAILBIRD<span>.</span>
+        CueGenius<span>.</span>
       </a>
       <div className="nav-right">
         <a className="nav-link" href="/dashboard">

@@ -39,11 +39,13 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .logo {
   font-family: "Bebas Neue", sans-serif;
   font-size: 40px;
@@ -51,7 +53,7 @@ body {
   line-height: 1;
 }
 .logo span {
-  color: var(--cue-yellow);
+  color: var(--blue-soft);
 }
 
 h1 {
@@ -90,7 +92,7 @@ h2 {
   font-size: 18px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--cue-yellow);
+  color: var(--blue-soft);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -135,14 +137,12 @@ h2 {
 }
 .field:focus {
   outline: none;
-  border-color: var(--cue-yellow);
+  border-color: var(--blue-soft);
 }
-
 .field option {
   background-color: #0c0f1a;
   color: var(--cream);
 }
-
 select.field {
   appearance: none;
   -webkit-appearance: none;
@@ -152,24 +152,47 @@ select.field {
   padding-right: 34px;
 }
 
-.btn-primary {
-  background: var(--blue);
-  color: #fff;
-  border-color: var(--blue);
+/* ---- Buttons (single source of truth) ---- */
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cream);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
 }
 .btn:hover {
   border-color: var(--muted);
+  text-decoration: none;
 }
 .btn:active {
   transform: translateY(1px);
 }
 .btn-primary {
-  background: var(--cue-yellow);
-  color: #0a0a0a;
-  border-color: var(--cue-yellow);
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+.btn-primary:hover {
+  background: var(--blue-soft);
+  border-color: var(--blue-soft);
+}
+.btn-accent {
+  background: rgba(77, 107, 255, 0.14);
+  border-color: rgba(77, 107, 255, 0.45);
+  color: var(--ice);
+}
+.btn-accent:hover {
+  background: rgba(77, 107, 255, 0.26);
+  border-color: rgba(77, 107, 255, 0.7);
 }
 .btn-danger {
-  background: rgba(212, 69, 58, 0.15);
+  background: rgba(255, 77, 87, 0.15);
   border-color: var(--red);
   color: #ffb4ad;
 }
@@ -187,7 +210,7 @@ select.field {
 }
 
 a {
-  color: var(--cue-yellow);
+  color: var(--blue-soft);
   text-decoration: none;
 }
 a:hover {
@@ -221,36 +244,13 @@ a:hover {
 }
 .error {
   color: #ffb4ad;
-  background: rgba(212, 69, 58, 0.15);
+  background: rgba(255, 77, 87, 0.15);
   border: 1px solid var(--red);
   padding: 10px 12px;
   border-radius: 10px;
 }
 
-.ball {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    inset -8px -10px 20px rgba(0, 0, 0, 0.5),
-    inset 6px 6px 14px rgba(255, 255, 255, 0.25),
-    0 8px 18px rgba(0, 0, 0, 0.4);
-}
-.ball-num {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--cream);
-  color: #0a0a0a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 30px;
-}
+/* ---- Navbar ---- */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -270,7 +270,6 @@ a:hover {
 .navbar .nav-link {
   padding: 6px 2px;
 }
-
 @media (max-width: 640px) {
   .navbar {
     padding: 12px 16px;
@@ -282,6 +281,8 @@ a:hover {
     font-size: 14px;
   }
 }
+
+/* ---- Match / player cards ---- */
 .match-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -375,7 +376,7 @@ a:hover {
   color: #fff;
 }
 .wl.W {
-  background: var(--chalk);
+  background: var(--blue);
 }
 .wl.L {
   background: var(--red);
@@ -387,23 +388,63 @@ a:hover {
   padding: 5px 12px;
   border-radius: 20px;
 }
-.btn-accent {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 10px;
-  background: rgba(77, 107, 255, 0.14);
-  border: 1px solid rgba(77, 107, 255, 0.45);
-  color: var(--ice);
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
+
+/* ---- Pool balls ---- */
+.poolball {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
 }
-.btn-accent:hover {
-  background: rgba(77, 107, 255, 0.26);
-  border-color: rgba(77, 107, 255, 0.7);
-  text-decoration: none;
+.poolball-num {
+  position: relative;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #f4efe1;
+  color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 28px;
+}
+.poolball.eight {
+  background: radial-gradient(
+    circle at 34% 30%,
+    #2e2e36 0%,
+    #0c0c10 60%,
+    #000 100%
+  );
+  box-shadow:
+    inset -8px -10px 22px rgba(0, 0, 0, 0.7),
+    inset 6px 7px 16px rgba(255, 255, 255, 0.18),
+    0 8px 18px rgba(0, 0, 0, 0.5);
+}
+.poolball.nine {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 30%,
+      #f4c542 30%,
+      #f4c542 70%,
+      transparent 70%,
+      transparent 100%
+    ),
+    radial-gradient(circle at 34% 30%, #ffffff 0%, #d8d8d8 65%, #b8b8b8 100%);
+  box-shadow:
+    inset -8px -10px 22px rgba(0, 0, 0, 0.35),
+    inset 6px 7px 16px rgba(255, 255, 255, 0.5),
+    0 8px 18px rgba(0, 0, 0, 0.5);
 }
 
+/* ---- Landing page ---- */
 .landing {
   position: relative;
   overflow: hidden;
@@ -417,42 +458,36 @@ a:hover {
     #000 100%
   );
 }
+.landing-bar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px 20px;
+}
+.landing-bar-actions {
+  display: flex;
+  gap: 10px;
+}
 .landing-hero {
+  position: relative;
+  z-index: 2;
   text-align: center;
-  padding: 80px 0 60px;
+  padding: 90px 24px 80px;
 }
 .landing-tagline {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 32px;
+  font-size: 30px;
   letter-spacing: 1px;
-  margin: 12px 0 10px;
-  color: var(--cream);
+  margin: 16px 0 10px;
 }
 .landing-sub {
-  max-width: 520px;
-  margin: 0 auto 28px;
+  max-width: 460px;
+  margin: 0 auto;
   color: var(--muted);
   font-size: 17px;
   line-height: 1.6;
-}
-.landing-cta {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.landing-features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-@media (max-width: 700px) {
-  .landing-features {
-    grid-template-columns: 1fr;
-  }
-  .landing-hero {
-    padding: 50px 0 40px;
-  }
 }
 
 .ghost {
@@ -499,15 +534,25 @@ a:hover {
   height: 280px;
   right: -60px;
   top: -60px;
-  background: radial-gradient(
-    circle at 34% 30%,
-    rgba(77, 107, 255, 0.4) 0%,
-    rgba(35, 35, 255, 0.18) 55%,
-    transparent 75%
-  );
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 34%,
+      rgba(244, 197, 66, 0.5) 34%,
+      rgba(244, 197, 66, 0.5) 66%,
+      transparent 66%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle at 34% 30%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.18) 55%,
+      transparent 78%
+    );
   box-shadow:
-    inset -16px -18px 44px rgba(0, 0, 0, 0.6),
-    inset 10px 12px 34px rgba(120, 150, 255, 0.12);
+    inset -16px -18px 44px rgba(0, 0, 0, 0.4),
+    inset 10px 12px 34px rgba(255, 255, 255, 0.12);
   animation: drift9 13s ease-in-out infinite;
 }
 .g9::after {
@@ -519,8 +564,8 @@ a:hover {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: rgba(234, 240, 246, 0.06);
-  color: rgba(127, 168, 255, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+  color: rgba(40, 40, 40, 0.5);
   font-family: "Bebas Neue", sans-serif;
   font-size: 58px;
   display: flex;
@@ -546,34 +591,6 @@ a:hover {
   }
 }
 
-.landing-corner {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  display: flex;
-  gap: 10px;
-  z-index: 3;
-}
-.landing-hero {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 140px 24px 80px;
-}
-.landing-tagline {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 30px;
-  letter-spacing: 1px;
-  margin: 16px 0 10px;
-}
-.landing-sub {
-  max-width: 460px;
-  margin: 0 auto;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.6;
-}
-
 @media (max-width: 640px) {
   .g8 {
     width: 240px;
@@ -584,81 +601,9 @@ a:hover {
     height: 190px;
   }
   .landing-hero {
-    padding: 110px 20px 60px;
+    padding: 70px 20px 60px;
   }
-}
-.landing-corner .btn {
-  display: inline-block;
-  padding: 9px 18px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-}
-.landing-corner .btn-primary {
-  background: var(--blue);
-  color: #fff;
-  border: 1px solid var(--blue);
-}
-.landing-corner .btn:not(.btn-primary) {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--cream);
-  border: 1px solid var(--line);
-}
-.poolball {
-  position: relative;
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-}
-.poolball-num {
-  position: relative;
-  z-index: 2;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: #f4efe1;
-  color: #0a0a0a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 28px;
-}
-
-/* solid 8-ball: black with a glossy highlight */
-.poolball.eight {
-  background: radial-gradient(
-    circle at 34% 30%,
-    #2e2e36 0%,
-    #0c0c10 60%,
-    #000 100%
-  );
-  box-shadow:
-    inset -8px -10px 22px rgba(0, 0, 0, 0.7),
-    inset 6px 7px 16px rgba(255, 255, 255, 0.18),
-    0 8px 18px rgba(0, 0, 0, 0.5);
-}
-
-/* striped 9-ball: white sphere with a yellow equator band */
-.poolball.nine {
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      transparent 30%,
-      #f4c542 30%,
-      #f4c542 70%,
-      transparent 70%,
-      transparent 100%
-    ),
-    radial-gradient(circle at 34% 30%, #ffffff 0%, #d8d8d8 65%, #b8b8b8 100%);
-  box-shadow:
-    inset -8px -10px 22px rgba(0, 0, 0, 0.35),
-    inset 6px 7px 16px rgba(255, 255, 255, 0.5),
-    0 8px 18px rgba(0, 0, 0, 0.5);
+  .landing-bar {
+    padding: 16px 20px;
+  }
 }

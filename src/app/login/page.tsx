@@ -1,4 +1,5 @@
-import { login, signup } from "@/lib/actions/auth";
+import { login } from "@/lib/actions/auth";
+import AuthShell from "../auth-shell";
 
 export default async function LoginPage({
   searchParams,
@@ -7,18 +8,9 @@ export default async function LoginPage({
 }) {
   const { error, message } = await searchParams;
   return (
-    <main className="app" style={{ maxWidth: 380 }}>
-      <div
-        className="logo"
-        style={{ textAlign: "center", fontSize: 56, marginTop: 40 }}
-      >
-        RAILBIRD<span>.</span>
-      </div>
-      <p className="label" style={{ textAlign: "center", marginBottom: 24 }}>
-        League Performance Tracker
-      </p>
-
-      <div className="card">
+    <AuthShell>
+      <div className="card" style={{ marginTop: 20 }}>
+        <div className="section-title">Log in</div>
         {error && <p className="error">{error}</p>}
         {message && (
           <p className="muted" style={{ marginBottom: 8 }}>
@@ -26,11 +18,6 @@ export default async function LoginPage({
           </p>
         )}
         <form>
-          <input
-            name="name"
-            placeholder="Display name (for sign up)"
-            className="field"
-          />
           <input
             name="email"
             type="email"
@@ -45,20 +32,26 @@ export default async function LoginPage({
             required
             className="field"
           />
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button
-              formAction={login}
-              className="btn btn-primary"
-              style={{ flex: 1 }}
-            >
-              Log in
-            </button>
-            <button formAction={signup} className="btn" style={{ flex: 1 }}>
-              Sign up
-            </button>
-          </div>
+          <button
+            formAction={login}
+            className="btn btn-primary btn-block"
+            style={{ marginTop: 8 }}
+          >
+            Log in
+          </button>
         </form>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 14,
+            fontSize: 14,
+          }}
+        >
+          <a href="/forgot-password">Forgot password?</a>
+          <a href="/signup">Create account</a>
+        </div>
       </div>
-    </main>
+    </AuthShell>
   );
 }

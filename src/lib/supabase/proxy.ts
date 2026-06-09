@@ -2,6 +2,15 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const hasBetaAccess = request.cookies.get("beta_access")?.value === "granted";
+  const isGate = pathname === "/beta";
+  if (!hasBetaAccess && !isGate) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/beta";
+    return NextResponse.redirect(url);
+  }
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

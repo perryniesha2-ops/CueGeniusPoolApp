@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Railbird — League Performance Tracker",
+  title: "CueGenius — League Performance Tracker",
   description:
     "Track your APA and FargoRate performance over your last 10 matches.",
 };
