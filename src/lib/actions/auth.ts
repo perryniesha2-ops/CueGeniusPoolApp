@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { headers } from "next/headers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail, emailLayout } from "@/lib/email";
 
@@ -28,16 +27,16 @@ export async function signup(formData: FormData) {
   });
   if (error) redirect("/signup?error=" + encodeURIComponent(error.message));
 
-  // Generate a confirmation link ourselves and send it via Resend.
-  const origin = (await headers()).get("origin") ?? "";
+  // Build our own confirmation link from hashed_token, send via Resend.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const admin = createAdminClient();
-  const { data: link } = await admin.auth.admin.generateLink({
+  const { data, error: linkError } = await admin.auth.admin.generateLink({
     type: "signup",
     email,
     password: formData.get("password") as string,
-    options: { redirectTo: `${origin}/auth/confirm?next=/dashboard` },
   });
-  if (link?.properties?.action_link) {
+  if (!linkError && data?.properties?.hashed_token) {
+    const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
     await sendEmail(
       email,
       "Confirm your RAILBIRD account",
@@ -45,7 +44,7 @@ export async function signup(formData: FormData) {
         "Confirm your account",
         "Tap below to verify your email and start tracking your matches.",
         "Confirm account",
-        link.properties.action_link,
+        link,
       ),
     );
   }
@@ -61,14 +60,14 @@ export async function logout() {
 
 export async function requestPasswordReset(formData: FormData) {
   const email = formData.get("email") as string;
-  const origin = (await headers()).get("origin") ?? "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const admin = createAdminClient();
-  const { data: link } = await admin.auth.admin.generateLink({
+  const { data, error } = await admin.auth.admin.generateLink({
     type: "recovery",
     email,
-    options: { redirectTo: `${origin}/auth/confirm?next=/reset-password` },
   });
-  if (link?.properties?.action_link) {
+  if (!error && data?.properties?.hashed_token) {
+    const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=recovery&next=/reset-password`;
     await sendEmail(
       email,
       "Reset your RAILBIRD password",
@@ -76,7 +75,7 @@ export async function requestPasswordReset(formData: FormData) {
         "Reset your password",
         "Tap below to choose a new password. This link expires in an hour.",
         "Reset password",
-        link.properties.action_link,
+        link,
       ),
     );
   }
