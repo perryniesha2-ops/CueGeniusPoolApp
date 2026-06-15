@@ -10,6 +10,9 @@ export async function GET(request: NextRequest) {
 
   if (token_hash && type) {
     const supabase = await createClient();
+    if (type === "recovery") {
+      await supabase.auth.signOut();
+    }
     const { error } = await supabase.auth.verifyOtp({ type, token_hash });
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
