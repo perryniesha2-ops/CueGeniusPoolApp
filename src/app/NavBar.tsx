@@ -1,9 +1,23 @@
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/lib/actions/auth";
+import { headers } from "next/headers";
+
+const HIDDEN_ON = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+  "/beta",
+  "/",
+];
 
 export default async function NavBar() {
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  if (HIDDEN_ON.includes(pathname)) return null;
+
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
+  if (!data?.claims) return null;
 
   // Logged out → no menu (keeps it off the login screen).
   if (!data?.claims) return null;
