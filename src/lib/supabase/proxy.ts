@@ -11,7 +11,14 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/beta";
     return NextResponse.redirect(url);
   }
-  let supabaseResponse = NextResponse.next({ request });
+
+  // (1) Build request headers with the current path so server components (NavBar) can read it.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,7 +32,10 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );
-          supabaseResponse = NextResponse.next({ request });
+          // (2) Rebuild the response WITH the same headers, or the path is lost on cookie refresh.
+          supabaseResponse = NextResponse.next({
+            request: { headers: requestHeaders },
+          });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options),
           );
