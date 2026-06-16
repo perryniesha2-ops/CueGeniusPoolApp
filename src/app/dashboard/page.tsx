@@ -1,27 +1,114 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { logout } from "@/lib/actions/auth";
 import {
   apaPerformance,
   apaScoreSeries,
+  apa9Performance,
+  apa9ScoreSeries,
   fargoPerformance,
   fargoRatingSeries,
+  matchStats,
+  apa8Efficiency,
+  apa9Efficiency,
   type Match,
+  type MatchStats,
 } from "@/lib/ratings";
 import type { Player } from "@/lib/types";
 import Sparkline from "./Sparkline";
-import { apa9Performance, apa9ScoreSeries } from "@/lib/ratings";
 import PoolBall from "./PoolBall";
 
-const ballColor = (sl: number) =>
-  ({
-    7: "radial-gradient(circle at 35% 30%, #5a2d8a, #2c0f47)",
-    6: "radial-gradient(circle at 35% 30%, #3aa05a, #0f4023)",
-    5: "radial-gradient(circle at 35% 30%, #e0962e, #7a4a0e)",
-    4: "radial-gradient(circle at 35% 30%, #d4453a, #5e120d)",
-    3: "radial-gradient(circle at 35% 30%, #3273c4, #0e2f5e)",
-    2: "radial-gradient(circle at 35% 30%, #222, #000)",
-  })[sl] ?? "#333";
+// Shared record + streak + W/L bar cards (same for every system).
+function RecordCards({
+  stats,
+  sampleSize,
+}: {
+  stats: MatchStats;
+  sampleSize: number;
+}) {
+  return (
+    <>
+      <div className="card">
+        <div className="label">Record · last {sampleSize}</div>
+        <div className="stat-big">
+          {stats.wins}–{stats.losses}
+        </div>
+        <div className="muted">{stats.winRate}% win rate</div>
+        <div style={{ display: "flex", gap: 4, marginTop: 10 }}>
+          {stats.resultsSeq
+            .slice(0, 10)
+            .reverse()
+            .map((won, i) => (
+              <div
+                key={i}
+                style={{
+                  flex: 1,
+                  height: 22,
+                  borderRadius: 3,
+                  background: won ? "var(--blue-soft)" : "rgba(255,77,87,0.4)",
+                }}
+              />
+            ))}
+        </div>
+      </div>
+      <div className="card">
+        <div className="label">Current streak</div>
+        <div
+          className="stat-big"
+          style={{ color: stats.streakType === "W" ? "#3ddc84" : "#ff4d57" }}
+        >
+          {stats.streakType}
+          {stats.streakCount}
+        </div>
+        <div className="muted">
+          {stats.streakType === "W" ? "on a roll" : "shake it off"}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// Official-vs-performance card. Works for skill levels (APA) and ratings (Fargo)
+// by passing the right unit label.
+function OfficialVsReal({
+  performance,
+  official,
+  unit,
+}: {
+  performance: number;
+  official: number | null;
+  unit: string;
+}) {
+  if (official == null) {
+    return (
+      <div className="card">
+        <div className="label">Official vs. real</div>
+        <div className="stat-big" style={{ fontSize: 28 }}>
+          —
+        </div>
+        <div className="muted">
+          <a href="/settings">Set your official level</a> to compare
+        </div>
+      </div>
+    );
+  }
+  const dir =
+    performance > official ? "up" : performance < official ? "down" : "even";
+  const color =
+    dir === "up" ? "#3ddc84" : dir === "down" ? "#ff4d57" : "#7c869b";
+  const arrow = dir === "up" ? "▲" : dir === "down" ? "▼" : "—";
+  return (
+    <div className="card">
+      <div className="label">Official vs. real</div>
+      <div className="stat-big">
+        {unit} {performance}{" "}
+        <span style={{ fontSize: 20, color }}>{arrow}</span>
+      </div>
+      <div className="muted">
+        official {unit} {official} · playing like {performance}
+      </div>
+    </div>
+  );
+}
 
 export default async function Dashboard({
   searchParams,
@@ -38,7 +125,6 @@ export default async function Dashboard({
     .select("display_name")
     .eq("id", claims.claims.sub)
     .single<{ display_name: string | null }>();
-
   const firstName = (profile?.display_name ?? "").trim().split(" ")[0];
 
   const { data: players } = await supabase
@@ -48,6 +134,7 @@ export default async function Dashboard({
     .returns<Player[]>();
   const playerList = players ?? [];
   const selectedId = selectedParam ?? playerList[0]?.id;
+  const player = playerList.find((p) => p.id === selectedId);
 
   let all: Match[] = [];
   if (selectedId) {
@@ -61,15 +148,25 @@ export default async function Dashboard({
   }
 
   const apa = all.filter((m) => m.system === "apa8").slice(0, 10);
-  const fargo = all.filter((m) => m.system === "fargo").slice(0, 10);
-  const apaResult = apaPerformance(apa);
-  const fargoResult = fargoPerformance(fargo);
-  const apaSeries = apaScoreSeries([...apa].reverse());
-  const fargoSeries = fargoRatingSeries([...fargo].reverse());
   const nine = all.filter((m) => m.system === "apa9").slice(0, 10);
-  const player9SL = playerList.find((p) => p.id === selectedId)?.apa9_sl ?? 4;
-  const apa9Result = apa9Performance(nine, player9SL);
+  const fargo = all.filter((m) => m.system === "fargo").slice(0, 10);
+
+  const apaResult = apaPerformance(apa);
+  const apa9Result = apa9Performance(nine, player?.apa9_sl ?? 4);
+  const fargoResult = fargoPerformance(fargo);
+
+  const apaSeries = apaScoreSeries([...apa].reverse());
   const apa9Series = apa9ScoreSeries([...nine].reverse());
+  const fargoSeries = fargoRatingSeries([...fargo].reverse());
+
+  const apa8Stats = matchStats(apa);
+  const apa9Stats = matchStats(nine);
+  const fargoStats = matchStats(fargo);
+  const apa8Eff = apa8Efficiency(apa);
+  const apa9Eff = apa9Efficiency(nine);
+
+  const needsSetup =
+    !player?.apa8_sl && !player?.apa9_sl && !player?.fargo_rating;
 
   return (
     <main className="app">
@@ -79,17 +176,30 @@ export default async function Dashboard({
       <p className="muted" style={{ marginBottom: 18 }}>
         Here&apos;s how you&apos;re playing.
       </p>
+
       <div
-        style={{ display: "flex", gap: 10, marginBottom: 18, flexWrap: "wrap" }}
+        style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}
       >
         <a href="/matches" className="btn btn-accent">
-          Log a match
+          + Log a match
         </a>
-
         <a href="/team" className="btn btn-accent">
           Teams &amp; players
         </a>
       </div>
+
+      {needsSetup && (
+        <div className="card" style={{ borderColor: "rgba(77,107,255,0.4)" }}>
+          <div className="section-title">Finish your profile</div>
+          <p className="muted" style={{ marginBottom: 10 }}>
+            Add your official skill levels so we can show how your real play
+            compares to how you&apos;re actually performing.
+          </p>
+          <a href="/settings" className="btn btn-primary">
+            Add my details
+          </a>
+        </div>
+      )}
 
       {playerList.length > 1 && (
         <div style={{ marginBottom: 18 }}>
@@ -105,7 +215,7 @@ export default async function Dashboard({
         </div>
       )}
 
-      {!apaResult && !fargoResult && (
+      {!apaResult && !apa9Result && !fargoResult && (
         <div className="card">
           <p className="muted">
             No matches yet. <a href="/matches">Log your first</a> to see your
@@ -114,66 +224,132 @@ export default async function Dashboard({
         </div>
       )}
 
+      {/* ---- APA 8-BALL ---- */}
       {apaResult && (
-        <div className="card">
-          <div className="label">APA 8-Ball · performance skill level</div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 20,
-              margin: "14px 0",
-            }}
-          >
-            <PoolBall kind="8" num={8} />
-            <div>
-              <div className="stat-big">SL {apaResult.skillLevel}</div>
-              <div className="muted">
-                avg score {apaResult.avgScore} · last {apaResult.sampleSize}
+        <>
+          <h2>APA 8-Ball</h2>
+          <div className="card">
+            <div className="section-title">Performance skill level</div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 20,
+                margin: "8px 0 14px",
+              }}
+            >
+              <PoolBall kind="8" num={apaResult.skillLevel} />
+              <div>
+                <div className="stat-big">SL {apaResult.skillLevel}</div>
+                <div className="muted">
+                  avg score {apaResult.avgScore} · last {apaResult.sampleSize}
+                </div>
               </div>
             </div>
+            <Sparkline values={apaSeries} invert />
           </div>
-          <Sparkline values={apaSeries} invert />
-        </div>
-      )}
-      {apa9Result && (
-        <div className="card">
-          <div className="section-title">
-            APA 9-Ball · performance skill level
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 20,
-              margin: "14px 0",
-            }}
-          >
-            <PoolBall kind="9" num={9} />
-            <div>
-              <div className="stat-big">SL {apa9Result.skillLevel}</div>
-              <div className="muted">
-                avg {apa9Result.avgScore} pts/inning · last{" "}
-                {apa9Result.sampleSize}
-              </div>
+          {apa8Stats && (
+            <div className="match-grid" style={{ marginBottom: 18 }}>
+              <RecordCards stats={apa8Stats} sampleSize={apa.length} />
+              <OfficialVsReal
+                performance={apaResult.skillLevel}
+                official={player?.apa8_sl ?? null}
+                unit="SL"
+              />
+              {apa8Eff && (
+                <div className="card">
+                  <div className="label">Innings per win</div>
+                  <div className="stat-big">{apa8Eff.inningsPerWin}</div>
+                  <div className="muted">
+                    {apa8Eff.safetiesPerMatch} safeties/match · lower is sharper
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-          <Sparkline values={apa9Series} />
-        </div>
+          )}
+        </>
       )}
 
+      {/* ---- APA 9-BALL ---- */}
+      {apa9Result && (
+        <>
+          <h2>APA 9-Ball</h2>
+          <div className="card">
+            <div className="section-title">Performance skill level</div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 20,
+                margin: "8px 0 14px",
+              }}
+            >
+              <PoolBall kind="9" num={apa9Result.skillLevel} />
+              <div>
+                <div className="stat-big">SL {apa9Result.skillLevel}</div>
+                <div className="muted">
+                  avg {apa9Result.avgScore} pts/inning · last{" "}
+                  {apa9Result.sampleSize}
+                </div>
+              </div>
+            </div>
+            <Sparkline values={apa9Series} />
+          </div>
+          {apa9Stats && (
+            <div className="match-grid" style={{ marginBottom: 18 }}>
+              <RecordCards stats={apa9Stats} sampleSize={nine.length} />
+              <OfficialVsReal
+                performance={apa9Result.skillLevel}
+                official={player?.apa9_sl ?? null}
+                unit="SL"
+              />
+              {apa9Eff && (
+                <div className="card">
+                  <div className="label">Points per inning</div>
+                  <div className="stat-big">{apa9Eff.avgPPI}</div>
+                  <div className="muted">
+                    best {apa9Eff.bestPPI} · higher is sharper
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ---- FARGORATE ---- */}
       {fargoResult && (
-        <div className="card">
-          <div className="label">FargoRate · performance rating</div>
-          <div className="stat-big">{fargoResult.rating}</div>
-          <div className="muted">
-            {fargoResult.games} games vs avg {fargoResult.avgOpponent}
-            {fargoResult.capped ? " · estimate" : ""}
+        <>
+          <h2>FargoRate</h2>
+          <div className="card">
+            <div className="section-title">Performance rating</div>
+            <div className="stat-big">{fargoResult.rating}</div>
+            <div className="muted">
+              {fargoResult.games} games vs avg {fargoResult.avgOpponent}
+              {fargoResult.capped ? " · estimate" : ""}
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <Sparkline values={fargoSeries} />
+            </div>
           </div>
-          <div style={{ marginTop: 12 }}>
-            <Sparkline values={fargoSeries} />
-          </div>
-        </div>
+          {fargoStats && (
+            <div className="match-grid" style={{ marginBottom: 18 }}>
+              <RecordCards stats={fargoStats} sampleSize={fargo.length} />
+              <OfficialVsReal
+                performance={fargoResult.rating}
+                official={player?.fargo_rating ?? null}
+                unit=""
+              />
+              {fargoStats.avgOpponent != null && (
+                <div className="card">
+                  <div className="label">Avg opponent</div>
+                  <div className="stat-big">{fargoStats.avgOpponent}</div>
+                  <div className="muted">average rating faced</div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </main>
   );

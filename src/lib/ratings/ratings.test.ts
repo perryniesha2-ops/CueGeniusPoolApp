@@ -3,6 +3,7 @@ import { apaMatchScore, apaSkillLevel, apaPerformance } from "./apa8";
 import { gameWinProbability, fargoPerformance } from "./fargo";
 import type { MatchInput } from "./types";
 import { apa9PPI, ppiToSkillLevel, apa9Performance } from "./apa9";
+import { matchStats } from "./stats";
 
 // Helper to build a match without typing every field each time.
 function match(overrides: Partial<MatchInput>): MatchInput {
@@ -17,6 +18,7 @@ function match(overrides: Partial<MatchInput>): MatchInput {
     opponent_rating: null,
     points_earned: null,
     opp_safeties: null,
+    played_at: null,
     ...overrides,
   };
 }
@@ -126,5 +128,30 @@ describe("APA 9-ball", () => {
     );
     const r = apa9Performance(games, 5);
     expect(r?.skillLevel).toBe(6);
+  });
+
+  describe("match stats", () => {
+    it("counts record and win rate", () => {
+      const ms = [
+        match({ won: true, played_at: "2026-01-03" }),
+        match({ won: false, played_at: "2026-01-02" }),
+        match({ won: true, played_at: "2026-01-01" }),
+      ];
+      const s = matchStats(ms)!;
+      expect(s.wins).toBe(2);
+      expect(s.losses).toBe(1);
+      expect(s.winRate).toBe(67);
+    });
+
+    it("finds the current streak from the most recent match", () => {
+      const ms = [
+        match({ won: true, played_at: "2026-01-03" }),
+        match({ won: true, played_at: "2026-01-02" }),
+        match({ won: false, played_at: "2026-01-01" }),
+      ];
+      const s = matchStats(ms)!;
+      expect(s.streakType).toBe("W");
+      expect(s.streakCount).toBe(2);
+    });
   });
 });

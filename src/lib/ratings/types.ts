@@ -13,6 +13,7 @@ export interface MatchInput {
   opponent_rating: number | null;
   points_earned: number | null;
   opp_safeties: number | null;
+  played_at: string | null;
 }
 
 export interface ApaResult {
