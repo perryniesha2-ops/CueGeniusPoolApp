@@ -27,7 +27,7 @@ export default async function LandingPage() {
 
       <div className="landing-hero">
         <div className="logo" style={{ fontSize: 76 }}>
-          CUEGENIUS.<span>.</span>
+          CUEGENIUS<span>.</span>
         </div>
         <div className="landing-tagline">
           Know how you&apos;re really playing.
