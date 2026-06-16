@@ -3,13 +3,23 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function sendEmail(to: string, subject: string, html: string) {
-  const { error } = await resend.emails.send({
-    from: process.env.EMAIL_FROM!,
-    to,
-    subject,
-    html,
-  });
-  if (error) console.error("Resend error:", error);
+  try {
+    const { error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM!,
+      to,
+      subject,
+      html,
+    });
+    if (error) {
+      console.error("Resend error:", error);
+      return { ok: false, error };
+    }
+    return { ok: true };
+  } catch (err) {
+    // Network failure, bad config, thrown exception — also a failure.
+    console.error("Resend threw:", err);
+    return { ok: false, error: err };
+  }
 }
 
 // A simple branded template wrapper.

@@ -26,9 +26,11 @@ export async function signup(formData: FormData) {
     options: { data: { display_name: formData.get("name") as string } },
   });
   if (error) redirect("/signup?error=" + encodeURIComponent(error.message));
+
+  // signUp may return an active session — kill it so the user must confirm
+  // and then log in fresh. No half-authenticated state.
   await supabase.auth.signOut();
 
-  // Build our own confirmation link from hashed_token, send via Resend.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const admin = createAdminClient();
   const { data, error: linkError } = await admin.auth.admin.generateLink({
@@ -36,19 +38,37 @@ export async function signup(formData: FormData) {
     email,
     password: formData.get("password") as string,
   });
-  if (!linkError && data?.properties?.hashed_token) {
-    const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
-    await sendEmail(
-      email,
-      "Confirm your CUEGENIUS. account",
-      emailLayout(
-        "Confirm your account",
-        "Tap below to verify your email and start tracking your matches.",
-        "Confirm account",
-        link,
-      ),
+
+  if (linkError || !data?.properties?.hashed_token) {
+    console.error("generateLink failed:", linkError);
+    redirect(
+      "/signup?error=" +
+        encodeURIComponent("Could not start signup. Please try again."),
     );
   }
+
+  const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
+  const result = await sendEmail(
+    email,
+    "Confirm your CueGenius account",
+    emailLayout(
+      "Confirm your account",
+      "Tap below to verify your email and start tracking your matches.",
+      "Confirm account",
+      link,
+    ),
+  );
+
+  if (!result.ok) {
+    // The account exists but the email didn't send — tell them plainly.
+    redirect(
+      "/signup?error=" +
+        encodeURIComponent(
+          "We couldn't send your confirmation email. Please try again or contact support.",
+        ),
+    );
+  }
+
   redirect("/login?message=Check your email to confirm, then log in.");
 }
 
@@ -67,11 +87,12 @@ export async function requestPasswordReset(formData: FormData) {
     type: "recovery",
     email,
   });
+
   if (!error && data?.properties?.hashed_token) {
     const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=recovery&next=/reset-password`;
-    await sendEmail(
+    const result = await sendEmail(
       email,
-      "Reset your CUEGENIUS. password",
+      "Reset your CueGenius password",
       emailLayout(
         "Reset your password",
         "Tap below to choose a new password. This link expires in an hour.",
@@ -79,8 +100,18 @@ export async function requestPasswordReset(formData: FormData) {
         link,
       ),
     );
+    if (!result.ok) {
+      // Log for ourselves — but DON'T tell the user, to avoid revealing
+      // whether this email has an account. This is the one place we
+      // deliberately stay silent on failure.
+      console.error(
+        "Password reset email failed for a registered user:",
+        result.error,
+      );
+    }
   }
-  // Same message regardless, so we don't reveal which emails are registered.
+
+  // Same message whether or not the email exists, or even if sending failed.
   redirect(
     "/forgot-password?message=If that email exists, a reset link is on its way.",
   );
