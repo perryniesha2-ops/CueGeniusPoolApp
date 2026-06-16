@@ -40,7 +40,7 @@ export async function signup(formData: FormData) {
     const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
     await sendEmail(
       email,
-      "Confirm your RAILBIRD account",
+      "Confirm your CUEGENIUS. account",
       emailLayout(
         "Confirm your account",
         "Tap below to verify your email and start tracking your matches.",
@@ -71,7 +71,7 @@ export async function requestPasswordReset(formData: FormData) {
     const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=recovery&next=/reset-password`;
     await sendEmail(
       email,
-      "Reset your RAILBIRD password",
+      "Reset your CUEGENIUS. password",
       emailLayout(
         "Reset your password",
         "Tap below to choose a new password. This link expires in an hour.",

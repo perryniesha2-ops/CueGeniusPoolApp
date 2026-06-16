@@ -13,7 +13,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
         }}
       >
         <div className="logo" style={{ fontSize: 56, textAlign: "center" }}>
-          CueGenius<span>.</span>
+          CUEGENIUS<span>.</span>
         </div>
         {children}
       </div>

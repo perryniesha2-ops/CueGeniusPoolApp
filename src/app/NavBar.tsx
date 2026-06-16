@@ -25,7 +25,7 @@ export default async function NavBar() {
   return (
     <nav className="navbar">
       <a href="/dashboard" className="logo" style={{ fontSize: 28 }}>
-        CueGenius<span>.</span>
+        CUEGENIUS<span>.</span>
       </a>
       <div className="nav-right">
         <a className="nav-link" href="/dashboard">

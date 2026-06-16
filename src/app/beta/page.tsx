@@ -12,7 +12,7 @@ export default async function BetaGate({
       <div className="card" style={{ marginTop: 20 }}>
         <div className="section-title">Private beta</div>
         <p className="muted" style={{ marginBottom: 10 }}>
-          RAILBIRD is in private beta. Enter the access password to continue.
+          CUEGENIUS. is in private beta. Enter the access password to continue.
         </p>
         {error && <p className="error">{error}</p>}
         <form action={checkBetaPassword}>

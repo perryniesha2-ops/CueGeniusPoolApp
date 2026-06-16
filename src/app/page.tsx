@@ -10,7 +10,7 @@ export default async function LandingPage() {
     <main className="landing">
       <header className="landing-bar">
         <div className="logo" style={{ fontSize: 30 }}>
-          CueGenius<span>.</span>
+          CUEGENIUS<span>.</span>
         </div>
         <div className="landing-bar-actions">
           <a href="/login" className="btn">
@@ -27,7 +27,7 @@ export default async function LandingPage() {
 
       <div className="landing-hero">
         <div className="logo" style={{ fontSize: 76 }}>
-          CueGenius<span>.</span>
+          CUEGENIUS.<span>.</span>
         </div>
         <div className="landing-tagline">
           Know how you&apos;re really playing.
