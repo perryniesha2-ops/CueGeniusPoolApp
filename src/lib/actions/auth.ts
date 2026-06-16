@@ -26,6 +26,7 @@ export async function signup(formData: FormData) {
     options: { data: { display_name: formData.get("name") as string } },
   });
   if (error) redirect("/signup?error=" + encodeURIComponent(error.message));
+  await supabase.auth.signOut();
 
   // Build our own confirmation link from hashed_token, send via Resend.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
