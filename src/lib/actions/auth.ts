@@ -87,6 +87,14 @@ export async function requestPasswordReset(formData: FormData) {
     type: "recovery",
     email,
   });
+  console.log(
+    "generateLink result:",
+    JSON.stringify({
+      error,
+      hasToken: !!data?.properties?.hashed_token,
+      props: data?.properties,
+    }),
+  );
 
   if (!error && data?.properties?.hashed_token) {
     const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=recovery&next=/reset-password`;
