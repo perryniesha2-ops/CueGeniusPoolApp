@@ -15,8 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CUEGENIUS. — League Performance Tracker",
-  description:
-    "Track your APA and FargoRate performance over your last 10 matches.",
+  description: "Track your performance over your last 10 matches.",
 };
 
 export default function RootLayout({
