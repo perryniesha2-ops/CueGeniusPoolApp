@@ -18,55 +18,60 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
-  const supabase = await createClient();
   const email = formData.get("email") as string;
-  const { error } = await supabase.auth.signUp({
-    email,
-    password: formData.get("password") as string,
-    options: { data: { display_name: formData.get("name") as string } },
-  });
-  if (error) redirect("/signup?error=" + encodeURIComponent(error.message));
-
-  // signUp may return an active session — kill it so the user must confirm
-  // and then log in fresh. No half-authenticated state.
-  await supabase.auth.signOut();
-
+  const password = formData.get("password") as string;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const admin = createAdminClient();
-  const { data, error: linkError } = await admin.auth.admin.generateLink({
+
+  // generateLink with type "signup" CREATES the user and returns the
+  // confirmation link in one step — no separate signUp() call.
+  const { data, error } = await admin.auth.admin.generateLink({
     type: "signup",
     email,
-    password: formData.get("password") as string,
+    password,
+    options: {
+      data: { display_name: formData.get("name") as string },
+    },
   });
 
-  if (linkError || !data?.properties?.hashed_token) {
-    console.error("generateLink failed:", linkError);
+  if (error) {
+    // Now THIS is where "email already registered" is handled properly —
+    // it means a real duplicate, so tell the user.
+    if (error.code === "email_exists") {
+      redirect(
+        "/signup?error=" +
+          encodeURIComponent(
+            "That email is already registered. Try logging in.",
+          ),
+      );
+    }
+    console.error("generateLink failed:", error);
     redirect(
       "/signup?error=" +
         encodeURIComponent("Could not start signup. Please try again."),
     );
   }
 
-  const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
-  const result = await sendEmail(
-    email,
-    "Confirm your CueGenius account",
-    emailLayout(
-      "Confirm your account",
-      "Tap below to verify your email and start tracking your matches.",
-      "Confirm account",
-      link,
-    ),
-  );
-
-  if (!result.ok) {
-    // The account exists but the email didn't send — tell them plainly.
-    redirect(
-      "/signup?error=" +
-        encodeURIComponent(
-          "We couldn't send your confirmation email. Please try again or contact support.",
-        ),
+  if (data?.properties?.hashed_token) {
+    const link = `${siteUrl}/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup&next=/dashboard`;
+    const result = await sendEmail(
+      email,
+      "Confirm your CueGenius account",
+      emailLayout(
+        "Confirm your account",
+        "Tap below to verify your email and start tracking your matches.",
+        "Confirm account",
+        link,
+      ),
     );
+    if (!result.ok) {
+      redirect(
+        "/signup?error=" +
+          encodeURIComponent(
+            "We couldn't send your confirmation email. Please try again.",
+          ),
+      );
+    }
   }
 
   redirect("/login?message=Check your email to confirm, then log in.");
