@@ -25,7 +25,11 @@ export default async function NavBar() {
   return (
     <nav className="navbar">
       <a href="/dashboard" className="logo" style={{ fontSize: 28 }}>
-        CUEGENIUS<span>.</span>
+        <img
+          src="/cuegenius-logo.svg"
+          alt="CueGenius"
+          style={{ height: 50, width: "auto", display: "block" }}
+        />{" "}
       </a>
       <div className="nav-right">
         <a className="nav-link" href="/dashboard">

@@ -56,7 +56,7 @@ export default function CalculatorDemo() {
     <div className="card" style={{ maxWidth: 520, margin: "0 auto" }}>
       <div className="section-title">What are you really playing at?</div>
       <p className="muted" style={{ marginBottom: 6 }}>
-        Enter a sample APA 8-ball match — no signup needed.
+        Enter a sample 8-ball match — no signup needed.
       </p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         {field("Your innings", inn, setInn, 1)}
