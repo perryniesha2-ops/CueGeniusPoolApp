@@ -20,6 +20,8 @@ body {
   color: var(--cream);
   min-height: 100vh;
   font-family: "Barlow", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 .app {
@@ -605,5 +607,46 @@ a:hover {
   }
   .landing-bar {
     padding: 16px 20px;
+  }
+}
+.footer {
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+  padding: 24px;
+}
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-brand {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--cream);
+}
+.footer-brand span {
+  color: var(--blue-soft);
+}
+.footer-links a {
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  color: var(--cream);
+}
+.footer-copy {
+  color: var(--muted);
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
   }
 }
