@@ -650,3 +650,31 @@ a:hover {
     text-align: center;
   }
 }
+
+/* ---- Mobile (≤600px) ---- */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .landing-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  .landing-bar img {
+    height: 46px;
+    max-width: 70%;
+  }
+  .landing-bar-actions {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
