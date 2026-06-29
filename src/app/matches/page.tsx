@@ -5,7 +5,12 @@ import MatchRow from "./MatchRow";
 import type { Match } from "@/lib/ratings";
 import type { Player } from "@/lib/types";
 
-export default async function MatchesPage() {
+export default async function MatchesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   if (!claims?.claims) redirect("/login");
@@ -25,6 +30,11 @@ export default async function MatchesPage() {
   return (
     <main className="app">
       <h1 style={{ marginBottom: 16 }}>Matches</h1>
+      {error && (
+        <p className="error" style={{ marginBottom: 16 }}>
+          {error}
+        </p>
+      )}
 
       <div className="card">
         <div className="section-title">Log a match</div>

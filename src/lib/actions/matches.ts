@@ -3,17 +3,44 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getOrCreateMyPlayer } from "@/lib/player";
+import { redirect } from "next/navigation";
 
 // Turns a form field into a number, or null if left blank.
 function num(formData: FormData, key: string): number | null {
   const v = formData.get(key);
   return v === null || v === "" ? null : Number(v);
 }
+function validateMatch(formData: FormData): string[] {
+  const system = formData.get("system") as string;
+  const missing: string[] = [];
+  if (system === "apa8") {
+    if (num(formData, "innings") === null) missing.push("innings");
+    if (num(formData, "games_won") === null) missing.push("games won");
+  } else if (system === "apa9") {
+    if (num(formData, "points_earned") === null) missing.push("points earned");
+    if (num(formData, "innings") === null) missing.push("innings");
+  } else if (system === "fargo") {
+    if (num(formData, "fargo_won") === null) missing.push("games you won");
+    if (num(formData, "fargo_lost") === null)
+      missing.push("games opponent won");
+  } else {
+    missing.push("a valid game type");
+  }
+  return missing;
+}
 
 export async function createMatch(formData: FormData) {
   const supabase = await createClient();
   const playerId =
     (formData.get("player_id") as string) || (await getOrCreateMyPlayer());
+
+  const missing = validateMatch(formData);
+  if (missing.length > 0) {
+    redirect(
+      "/matches?error=" +
+        encodeURIComponent(`Please enter ${missing.join(", ")}.`),
+    );
+  }
 
   await supabase.from("matches").insert({
     player_id: playerId,

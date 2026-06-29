@@ -53,9 +53,11 @@ export default function MatchForm({ players }: { players: Player[] }) {
           <input
             name="innings"
             type="number"
+            required
             placeholder="Total innings (from scoresheet)"
             className="field"
           />
+
           <input
             name="safeties"
             type="number"
@@ -71,6 +73,7 @@ export default function MatchForm({ players }: { players: Player[] }) {
           <input
             name="games_won"
             type="number"
+            required
             placeholder="Games you won"
             className="field"
           />
@@ -82,12 +85,15 @@ export default function MatchForm({ players }: { players: Player[] }) {
           <input
             name="points_earned"
             type="number"
+            required
             placeholder="Points you earned"
             className="field"
           />
+
           <input
             name="innings"
             type="number"
+            required
             placeholder="Your innings"
             className="field"
           />
@@ -99,12 +105,15 @@ export default function MatchForm({ players }: { players: Player[] }) {
           <input
             name="fargo_won"
             type="number"
+            required
             placeholder="Games you won"
             className="field"
           />
+
           <input
             name="fargo_lost"
             type="number"
+            required
             placeholder="Games opponent won"
             className="field"
           />
