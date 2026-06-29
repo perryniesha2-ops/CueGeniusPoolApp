@@ -11,7 +11,9 @@ export default function Footer() {
           />{" "}
         </div>
         <div className="footer-links">
-          <a href="mailto:support@synthqa.app">Contact us</a>
+          <a href="/about">About Us</a>{" "}
+          <span style={{ color: "var(--muted)", margin: "0 12px" }}>·</span>
+          <a href="/contact">Contact us</a>
         </div>
         <div className="footer-copy">
           © {year} CueGenius. All rights reserved.
