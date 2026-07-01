@@ -16,6 +16,7 @@ import {
 import type { Player } from "@/lib/types";
 import Sparkline from "./Sparkline";
 import PoolBall from "./PoolBall";
+import { hasProAccess, trialDaysLeft } from "@/lib/access";
 
 // Shared record + streak + W/L bar cards (same for every system).
 function RecordCards({
@@ -67,8 +68,7 @@ function RecordCards({
   );
 }
 
-// Official-vs-performance card. Works for skill levels (APA) and ratings (Fargo)
-// by passing the right unit label.
+// Official-vs-performance card. Works for skill levels (APA) and ratings (Fargo).
 function OfficialVsReal({
   performance,
   official,
@@ -110,6 +110,27 @@ function OfficialVsReal({
   );
 }
 
+// The single upgrade prompt shown to non-pro users who have matches.
+function UpgradePrompt() {
+  return (
+    <div
+      className="card"
+      style={{ textAlign: "center", borderColor: "rgba(77,107,255,0.4)" }}
+    >
+      <div className="section-title" style={{ justifyContent: "center" }}>
+        Unlock your full stats
+      </div>
+      <p className="muted" style={{ marginBottom: 12 }}>
+        Win rate, streaks, efficiency, and official-vs-real comparisons are part
+        of CueGenius Pro.
+      </p>
+      <a href="/pricing" className="btn btn-primary">
+        Upgrade to Pro
+      </a>
+    </div>
+  );
+}
+
 export default async function Dashboard({
   searchParams,
 }: {
@@ -122,10 +143,19 @@ export default async function Dashboard({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, subscription_status, created_at")
     .eq("id", claims.claims.sub)
-    .single<{ display_name: string | null }>();
-  const firstName = (profile?.display_name ?? "").trim().split(" ")[0];
+    .single<{
+      display_name: string | null;
+      subscription_status: string | null;
+      created_at: string;
+    }>();
+  if (!profile) redirect("/login");
+
+  const firstName = (profile.display_name ?? "").trim().split(" ")[0];
+  const pro = hasProAccess(profile);
+  const daysLeft = trialDaysLeft(profile);
+  const isSubscribed = profile.subscription_status === "active";
 
   const { data: players } = await supabase
     .from("players")
@@ -168,6 +198,8 @@ export default async function Dashboard({
   const needsSetup =
     !player?.apa8_sl && !player?.apa9_sl && !player?.fargo_rating;
 
+  const hasAnyResult = !!(apaResult || apa9Result || fargoResult);
+
   return (
     <main className="app">
       <h1 style={{ marginBottom: 4 }}>
@@ -176,6 +208,22 @@ export default async function Dashboard({
       <p className="muted" style={{ marginBottom: 18 }}>
         Here&apos;s how you&apos;re playing.
       </p>
+
+      {/* ---- Trial / subscription status banner ---- */}
+      {isSubscribed ? null : !pro ? (
+        <div className="card" style={{ borderColor: "rgba(77,107,255,0.4)" }}>
+          <span className="muted">Your free trial has ended. </span>
+          <a href="/pricing">Upgrade to keep full access →</a>
+        </div>
+      ) : (
+        <div className="card" style={{ borderColor: "rgba(77,107,255,0.4)" }}>
+          <span className="muted">
+            {daysLeft} day{daysLeft === 1 ? "" : "s"} left in your free
+            trial.{" "}
+          </span>
+          <a href="/pricing">Upgrade →</a>
+        </div>
+      )}
 
       <div
         style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}
@@ -215,7 +263,7 @@ export default async function Dashboard({
         </div>
       )}
 
-      {!apaResult && !apa9Result && !fargoResult && (
+      {!hasAnyResult && (
         <div className="card">
           <p className="muted">
             No matches yet. <a href="/matches">Log your first</a> to see your
@@ -223,6 +271,9 @@ export default async function Dashboard({
           </p>
         </div>
       )}
+
+      {/* One upgrade prompt for non-pro users who actually have matches. */}
+      {!pro && hasAnyResult && <UpgradePrompt />}
 
       {/* ---- APA 8-BALL ---- */}
       {apaResult && (
@@ -248,7 +299,7 @@ export default async function Dashboard({
             </div>
             <Sparkline values={apaSeries} invert />
           </div>
-          {apa8Stats && (
+          {pro && apa8Stats && (
             <div className="match-grid" style={{ marginBottom: 18 }}>
               <RecordCards stats={apa8Stats} sampleSize={apa.length} />
               <OfficialVsReal
@@ -295,7 +346,7 @@ export default async function Dashboard({
             </div>
             <Sparkline values={apa9Series} />
           </div>
-          {apa9Stats && (
+          {pro && apa9Stats && (
             <div className="match-grid" style={{ marginBottom: 18 }}>
               <RecordCards stats={apa9Stats} sampleSize={nine.length} />
               <OfficialVsReal
@@ -332,7 +383,7 @@ export default async function Dashboard({
               <Sparkline values={fargoSeries} />
             </div>
           </div>
-          {fargoStats && (
+          {pro && fargoStats && (
             <div className="match-grid" style={{ marginBottom: 18 }}>
               <RecordCards stats={fargoStats} sampleSize={fargo.length} />
               <OfficialVsReal
