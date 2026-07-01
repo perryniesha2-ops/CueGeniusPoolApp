@@ -1,5 +1,6 @@
 import { login } from "@/lib/actions/auth";
 import AuthShell from "../auth-shell";
+import Footer from "@/app/Footer";
 
 export default async function LoginPage({
   searchParams,
@@ -54,4 +55,5 @@ export default async function LoginPage({
       </div>
     </AuthShell>
   );
+  <Footer />;
 }
