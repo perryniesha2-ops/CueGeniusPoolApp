@@ -56,7 +56,7 @@ export default function AboutPage() {
         <div className="section-title">Contact</div>
         <p style={{ lineHeight: 1.7, color: "var(--cream)" }}>
           Questions, feedback, or issues? Reach us at{" "}
-          <a href="mailto:support@synthqa.app">support@synthqa.app</a>.
+          <a href="mailto:cuegenius@synthqa.app">cuegenius@synthqa.app</a>.
         </p>
       </div>
 

@@ -7,15 +7,17 @@ export default function TermsPage() {
   return (
     <main className="app" style={{ maxWidth: 760 }}>
       <h1>Terms of Service</h1>
-      <p className="muted" style={{ marginBottom: 24 }}>Last updated: {updated}</p>
+      <p className="muted" style={{ marginBottom: 24 }}>
+        Last updated: {updated}
+      </p>
 
       <div className="card">
         <p style={{ lineHeight: 1.7 }}>
-          These Terms of Service (&quot;Terms&quot;) govern your use of CueGenius
-          (&quot;the Service&quot;), operated by SynthQA (&quot;we,&quot;
-          &quot;us,&quot; or &quot;our&quot;). By creating an account or using the
-          Service, you agree to these Terms. If you do not agree, please do not
-          use the Service.
+          These Terms of Service (&quot;Terms&quot;) govern your use of
+          CueGenius (&quot;the Service&quot;), operated by SynthQA
+          (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). By creating an
+          account or using the Service, you agree to these Terms. If you do not
+          agree, please do not use the Service.
         </p>
       </div>
 
@@ -66,44 +68,44 @@ export default function TermsPage() {
         You may cancel your subscription at any time; cancellation takes effect
         at the end of the current billing period, and you retain access until
         then. We do not generally provide refunds for partial billing periods
-        except where required by law. Payments are processed by Stripe; we do not
-        store your full card details.
+        except where required by law. Payments are processed by Stripe; we do
+        not store your full card details.
       </Section>
 
       <Section title="7. Acceptable use">
-        You agree not to misuse the Service, including attempting to access it by
-        unauthorized means, disrupting its operation, reselling access, or using
-        it to violate any law. We may suspend or terminate accounts that violate
-        these Terms.
+        You agree not to misuse the Service, including attempting to access it
+        by unauthorized means, disrupting its operation, reselling access, or
+        using it to violate any law. We may suspend or terminate accounts that
+        violate these Terms.
       </Section>
 
       <Section title="8. Your data">
-        You retain ownership of the match data you enter. You grant us permission
-        to store and process it to provide the Service. Our handling of personal
-        data is described in our{" "}
+        You retain ownership of the match data you enter. You grant us
+        permission to store and process it to provide the Service. Our handling
+        of personal data is described in our{" "}
         <a href="/privacy">Privacy Policy</a>.
       </Section>
 
       <Section title="9. Disclaimers and limitation of liability">
-        The Service is provided &quot;as is&quot; without warranties of any kind.
-        The performance estimates are approximations and we do not guarantee
-        their accuracy. To the fullest extent permitted by law, we are not liable
-        for any indirect, incidental, or consequential damages arising from your
-        use of the Service. Our total liability is limited to the amount you paid
-        us in the twelve months preceding the claim.
+        The Service is provided &quot;as is&quot; without warranties of any
+        kind. The performance estimates are approximations and we do not
+        guarantee their accuracy. To the fullest extent permitted by law, we are
+        not liable for any indirect, incidental, or consequential damages
+        arising from your use of the Service. Our total liability is limited to
+        the amount you paid us in the twelve months preceding the claim.
       </Section>
 
       <Section title="10. Changes to these Terms">
-        We may update these Terms from time to time. If we make material changes,
-        we will update the &quot;Last updated&quot; date and, where appropriate,
-        notify you. Continued use of the Service after changes take effect
-        constitutes acceptance.
+        We may update these Terms from time to time. If we make material
+        changes, we will update the &quot;Last updated&quot; date and, where
+        appropriate, notify you. Continued use of the Service after changes take
+        effect constitutes acceptance.
       </Section>
 
       <Section title="11. Contact">
         Questions about these Terms? Reach us at{" "}
-        <a href="mailto:support@synthqa.app">support@synthqa.app</a> or through
-        our <a href="/contact">contact page</a>.
+        <a href="mailto:cuegenius@synthqa.app">cuegenius@synthqa.app</a> or
+        through our <a href="/contact">contact page</a>.
       </Section>
 
       <p className="muted" style={{ fontSize: 13, marginTop: 20 }}>
@@ -113,7 +115,13 @@ export default function TermsPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div style={{ marginBottom: 20 }}>
       <h2 style={{ fontSize: 20, marginBottom: 8 }}>{title}</h2>

@@ -32,7 +32,7 @@ export async function sendContactMessage(formData: FormData) {
     </div>`;
 
   const result = await sendEmail(
-    "support@synthqa.app", // where contact messages go (swap to cuegenius domain later)
+    "cuegenius@synthqa.app", // where contact messages go (swap to cuegenius domain later)
     `Contact form: ${name}`,
     html,
   );

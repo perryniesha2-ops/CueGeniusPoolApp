@@ -90,8 +90,8 @@ export default function PrivacyPage() {
         Depending on your location, you may have the right to access, correct,
         or delete your personal data, or to object to certain processing. To
         make a request, contact us at{" "}
-        <a href="mailto:support@synthqa.app">support@synthqa.app</a>. We will
-        respond within a reasonable time.
+        <a href="mailto:cuegenius@synthqa.app">cuegenius@synthqa.app</a>. We
+        will respond within a reasonable time.
       </Section>
 
       <Section title="8. Security">
@@ -114,8 +114,8 @@ export default function PrivacyPage() {
 
       <Section title="11. Contact">
         Questions about your privacy? Reach us at{" "}
-        <a href="mailto:support@synthqa.app">support@synthqa.app</a> or through
-        our <a href="/contact">contact page</a>.
+        <a href="mailto:cuegenius@synthqa.app">cuegenius@synthqa.app</a> or
+        through our <a href="/contact">contact page</a>.
       </Section>
 
       <p className="muted" style={{ fontSize: 13, marginTop: 20 }}>
