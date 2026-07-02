@@ -14,7 +14,17 @@ export default async function LoginPage({
         <div className="section-title">Log in</div>
         {error && <p className="error">{error}</p>}
         {message && (
-          <p className="muted" style={{ marginBottom: 8 }}>
+          <p
+            style={{
+              marginBottom: 12,
+              padding: "10px 12px",
+              borderRadius: 10,
+              background: "rgba(77, 107, 255, 0.12)",
+              border: "1px solid rgba(77, 107, 255, 0.35)",
+              color: "var(--ice)",
+              fontSize: 14,
+            }}
+          >
             {message}
           </p>
         )}
