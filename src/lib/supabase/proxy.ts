@@ -3,6 +3,9 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
 
   const hasBetaAccess = request.cookies.get("beta_access")?.value === "granted";
   const isGate = pathname === "/beta";
