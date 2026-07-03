@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import GhostBalls from "@/app/GhostBalls";
 import CalculatorDemo from "./CalculatorDemo";
+import { Metadata } from "next";
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -41,3 +42,7 @@ export default async function LandingPage() {
     </main>
   );
 }
+export const metadata: Metadata = {
+  title: "CUEGENIUS. — League Performance Tracker",
+  description: "Track your performance over your last 10 matches.",
+};

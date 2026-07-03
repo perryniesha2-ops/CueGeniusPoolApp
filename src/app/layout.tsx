@@ -15,8 +15,56 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CUEGENIUS. — League Performance Tracker",
-  description: "Track your performance over your last 10 matches.",
+  metadataBase: new URL("https://cuegenius.synthqa.app"),
+  title: {
+    default: "CueGenius — Pool League Performance Tracker",
+    template: "%s · CueGenius",
+  },
+  description:
+    "Track your APA and FargoRate matches and see the skill level you're really performing at over your last 10 games.",
+  keywords: [
+    "pool",
+    "billiards",
+    "APA",
+    "FargoRate",
+    "8-ball",
+    "9-ball",
+    "pool league",
+    "skill level",
+    "performance tracker",
+    "pool stats",
+    "cue sports",
+    "league tracker",
+  ],
+  authors: [{ name: "SynthQA" }],
+  creator: "SynthQA",
+  openGraph: {
+    type: "website",
+    url: "https://cuegenius.synthqa.app",
+    siteName: "CueGenius",
+    title: "CueGenius — Know how you're really playing",
+    description:
+      "Track your matches and see the skill level you're performing at over your last 10 games.",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CueGenius — Pool League Performance Tracker",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CueGenius — Pool Performance Tracker",
+    description: "See the skill level you're really playing at.",
+    images: ["/opengraph-image.png"],
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
