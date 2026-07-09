@@ -4,6 +4,14 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const hasBetaAccess = request.cookies.get("beta_access")?.value === "granted";
+  const isGate = pathname === "/beta";
+  if (!hasBetaAccess && !isGate) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/beta";
+    return NextResponse.redirect(url);
+  }
+
   // (1) Build request headers with the current path so server components (NavBar) can read it.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
