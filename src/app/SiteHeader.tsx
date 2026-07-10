@@ -12,13 +12,16 @@ export default function SiteHeader() {
         alt="CueGenius"
         style={{ height: 40, width: "auto", display: "block" }}
       />
-      <nav aria-label="Primary" className="hidden gap-2.5 md:flex">
-        <Link href="/login" className={navLink}>
+      <nav aria-label="Primary" className="flex gap-2 md:gap-2.5">
+        <Link
+          href="/login"
+          className={`${navLink} px-2.5 py-1.5 text-[0.6rem] md:px-3.5 md:py-2 md:text-[0.68rem]`}
+        >
           Log in
         </Link>
         <Link
           href="/signup"
-          className={`${navLink} border-cue-volt bg-cue-volt text-cue-void`}
+          className={`${navLink} border-cue-volt bg-cue-volt text-cue-void px-2.5 py-1.5 text-[0.6rem] md:px-3.5 md:py-2 md:text-[0.68rem]`}
         >
           Sign up
         </Link>

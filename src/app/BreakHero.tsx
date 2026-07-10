@@ -76,8 +76,8 @@ export default function BreakHero() {
       >
         ↻ Re-break
       </button>
-      <div className="relative z-[2] flex min-h-screen w-full flex-col justify-end gap-4 px-4 pb-10 pt-24 md:px-8">
-        <h1 className="font-display text-[clamp(2rem,6vw,5rem)] uppercase leading-[0.9] text-cue-bone">
+      <div className="relative z-[2] flex min-h-screen w-full flex-col justify-end gap-3 px-4 pb-6 pt-20 md:gap-4 md:pb-8 md:px-8">
+        <h1 className="font-display text-[clamp(2rem,8vw,4.5rem)] uppercase leading-[0.9] text-cue-bone">
           <span className="block">Smash the</span>
           <span
             className="block text-transparent"
@@ -89,21 +89,19 @@ export default function BreakHero() {
             Track the <span className="text-cue-magenta">damage.</span>
           </span>
         </h1>
-        <div className="flex flex-wrap items-center gap-8">
-          <div className="flex flex-wrap items-center gap-8">
-            <p className="max-w-[420px] font-mono text-[0.82rem] leading-relaxed text-cue-bone/75">
-              &gt; Track your matches and see the skill level you&apos;re
-              performing at{" "}
-              <b className="font-bold text-cue-volt">over your last 10 games</b>
-              . Stop playing on vibes. Start playing on data.
-            </p>
-            <Link
-              href="/signup"
-              className="inline-block bg-cue-volt px-10 py-4 font-display text-[1.05rem] uppercase tracking-[0.08em] text-cue-void shadow-[6px_6px_0_#FF2E88] transition-all hover:-translate-x-[3px] hover:-translate-y-[3px] hover:shadow-[9px_9px_0_#FF2E88]"
-            >
-              Start tracking
-            </Link>
-          </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-8">
+          <p className="max-w-[420px] font-mono text-[0.78rem] leading-relaxed text-cue-bone/75">
+            &gt; Track your matches and see the skill level you&apos;re
+            performing at{" "}
+            <b className="font-bold text-cue-volt">over your last 10 games</b>.
+            Stop playing on vibes. Start playing on data.
+          </p>
+          <Link
+            href="/signup"
+            className="inline-block self-start bg-cue-volt px-8 py-3.5 font-display text-[1rem] uppercase tracking-[0.08em] text-cue-void shadow-[6px_6px_0_#FF2E88] transition-all hover:-translate-x-[3px] hover:-translate-y-[3px] hover:shadow-[9px_9px_0_#FF2E88]"
+          >
+            Start tracking
+          </Link>
         </div>
       </div>
     </div>
