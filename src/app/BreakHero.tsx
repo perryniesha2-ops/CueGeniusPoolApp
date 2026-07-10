@@ -72,11 +72,11 @@ export default function BreakHero() {
       <button
         type="button"
         onClick={doRack}
-        className="absolute bottom-8 right-4 z-[3] border border-cue-cyan px-4 py-2 font-mono text-[0.68rem] font-bold uppercase tracking-[0.15em] text-cue-cyan transition-colors hover:bg-cue-cyan hover:text-cue-void md:right-8"
+        className="absolute right-4 top-28 z-[3] border border-cue-cyan px-4 py-2 font-mono text-[0.68rem] font-bold uppercase tracking-[0.15em] text-cue-cyan transition-colors hover:bg-cue-cyan hover:text-cue-void md:right-8"
       >
         ↻ Re-break
       </button>
-      <div className="relative z-[2] flex min-h-screen w-full flex-col justify-end gap-3 px-4 pb-6 pt-20 md:gap-4 md:pb-8 md:px-8">
+      <div className="relative z-[2] flex min-h-screen w-full flex-col justify-start gap-6 px-4 pb-10 pt-28 md:px-8">
         <h1 className="font-display text-[clamp(2rem,8vw,4.5rem)] uppercase leading-[0.9] text-cue-bone">
           <span className="block">Smash the</span>
           <span

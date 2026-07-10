@@ -1,7 +1,7 @@
 // components/landing/MarqueeBand.tsx
 // Server component. Alternating filled/hollow words on a tilted band.
 
-const WORDS = ['Break', 'Run', 'Repeat'];
+const WORDS = ["Break", "Run", "Repeat"];
 
 export default function MarqueeBand() {
   const items = Array.from({ length: 12 }, (_, i) => WORDS[i % 3]);
@@ -16,8 +16,8 @@ export default function MarqueeBand() {
             key={i}
             className={
               i % 2 === 1
-                ? 'mx-6 text-transparent [-webkit-text-stroke:1.5px_#0E0616]'
-                : 'mx-6'
+                ? "mx-6 text-transparent [-webkit-text-stroke:1.5px_#0E0616]"
+                : "mx-6"
             }
           >
             {w}

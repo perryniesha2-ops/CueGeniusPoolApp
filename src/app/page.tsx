@@ -33,8 +33,10 @@ export default async function LandingPage() {
     <main className="scanlines relative min-h-screen overflow-x-hidden bg-cue-void font-sans text-cue-bone selection:bg-cue-magenta selection:text-cue-void">
       <StatTicker />
       <SiteHeader />
-      <BreakHero />
-      <MarqueeBand />
+      <div className="relative z-[2] flex min-h-screen w-full flex-col justify-end px-4 pb-16 pt-28 md:px-8">
+        <BreakHero />
+        <MarqueeBand />
+      </div>
     </main>
   );
 }
