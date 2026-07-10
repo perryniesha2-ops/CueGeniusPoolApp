@@ -1,8 +1,28 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import GhostBalls from "@/app/GhostBalls";
-import CalculatorDemo from "./CalculatorDemo";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import StatTicker from "./StatTicker";
+import SiteHeader from "./SiteHeader";
+import BreakHero from "./BreakHero";
+
+import Footer from "./Footer";
+
+import MarqueeBand from "./MarqueeBand";
+import { LoadoutGrid, Readout, FinalCta, SiteFooter } from "./Sections";
+
+export const metadata: Metadata = {
+  title: "CueGenius — Track your pool game like it hits back",
+  description:
+    "CueGenius logs every inning, break, and run-out, then turns it into a live performance readout. PPI scoring, trend analysis, and league standings for 9-ball players.",
+  openGraph: {
+    title: "CueGenius — Smash the rack. Track the damage.",
+    description:
+      "Pool performance tracking with PPI scoring, inning-by-inning logging, and 12-week trend curves.",
+    url: "https://www.cuegenius.synthqa.app",
+    siteName: "CueGenius",
+    type: "website",
+  },
+};
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -10,39 +30,11 @@ export default async function LandingPage() {
   if (data?.claims) redirect("/dashboard");
 
   return (
-    <main className="landing">
-      <header className="landing-bar">
-        <img
-          src="/cuegenius-logo.svg"
-          alt="CueGenius"
-          style={{ height: 90, width: "auto", display: "block" }}
-        />
-        <div className="landing-bar-actions">
-          <a href="/login" className="btn">
-            Log in
-          </a>
-          <a href="/signup" className="btn btn-primary">
-            Sign up
-          </a>
-        </div>
-      </header>
-
-      <GhostBalls />
-
-      <div className="landing-hero">
-        <div className="landing-tagline">
-          Know how you&apos;re really playing.
-        </div>
-        <CalculatorDemo />
-        <p className="landing-sub">
-          Track your matches and see the skill level you&apos;re performing at
-          over your last 10 games.
-        </p>
-      </div>
+    <main className="scanlines relative min-h-screen overflow-x-hidden bg-cue-void font-sans text-cue-bone selection:bg-cue-magenta selection:text-cue-void">
+      <StatTicker />
+      <SiteHeader />
+      <BreakHero />
+      <MarqueeBand />
     </main>
   );
 }
-export const metadata: Metadata = {
-  title: "CUEGENIUS. — League Performance Tracker",
-  description: "Track your performance over your last 10 matches.",
-};

@@ -91,7 +91,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NavBar />
-        {children}
+        <div className="flex-1">{children}</div>
         <Footer />
       </body>
     </html>

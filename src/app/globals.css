@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+/* ============================================================
+   LANDING PAGE THEME (cyber palette) — Tailwind v4 tokens
+   Used via utility classes: bg-cue-void, text-cue-magenta, etc.
+   ============================================================ */
+@theme {
+  --color-cue-void: #0e0616;
+  --color-cue-void-2: #160a24;
+  --color-cue-magenta: #ff2e88;
+  --color-cue-cyan: #22e4ff;
+  --color-cue-volt: #f5ff66;
+  --color-cue-bone: #efeaf5;
+
+  --font-display: "Anton", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --animate-ticker: ticker 22s linear infinite;
+  --animate-ticker-slow: ticker 18s linear infinite;
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============================================================
+   APP THEME (blue palette) — CSS variables for the app pages
+   ============================================================ */
 :root {
   --bg-top: #0a0d18;
   --cream: #eaf0f6;
@@ -14,23 +42,61 @@
   --felt: #0a0d18;
 }
 
+/* ------------------------------------------------------------
+   BODY — kept minimal so it doesn't fight the landing page.
+   No background/font here; the app pages style themselves
+   via .app, and the landing page styles itself via Tailwind.
+   ------------------------------------------------------------ */
 body {
-  background: linear-gradient(180deg, #0a0d18 0%, #05060c 55%, #000000 100%);
-  background-attachment: fixed;
   color: var(--cream);
   min-height: 100vh;
-  font-family: "Barlow", system-ui, sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  background: #0e0616;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   APP PAGE STYLES — all scoped under .app so they never
+   leak onto the landing page.
+   ============================================================ */
 .app {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 28px 24px 80px;
   box-sizing: border-box;
+  font-family: "Barlow", system-ui, sans-serif;
+  background: linear-gradient(rgba(34, 228, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 228, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(180deg, #0a0d18 0%, #05060c 55%, #000000 100%);
+  background-size: 80px 80px, 80px 80px, auto;
+  background-attachment: fixed;
+}
+
+.app h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 34px;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+.app h2 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+  font-weight: 400;
+  margin: 24px 0 10px;
+}
+.app a {
+  color: var(--blue-soft);
+  text-decoration: none;
+}
+.app a:hover {
+  text-decoration: underline;
 }
 
 .grid-2 {
@@ -43,6 +109,16 @@ body {
   .grid-2 {
     grid-template-columns: 1fr;
   }
+}
+
+.grid-bg {
+  background-color: #0e0616;
+  background-image: linear-gradient(
+      rgba(34, 228, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(34, 228, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
 .topbar {
@@ -61,20 +137,6 @@ body {
   color: var(--blue-soft);
 }
 
-h1 {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 34px;
-  letter-spacing: 1px;
-  font-weight: 400;
-}
-h2 {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 24px;
-  letter-spacing: 1px;
-  font-weight: 400;
-  margin: 24px 0 10px;
-}
-
 .card {
   position: relative;
   background: linear-gradient(
@@ -87,9 +149,7 @@ h2 {
   border-radius: 18px;
   padding: 18px;
   margin-bottom: 18px;
-  box-shadow:
-    0 0 40px rgba(77, 107, 255, 0.1),
-    0 12px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 40px rgba(77, 107, 255, 0.1), 0 12px 30px rgba(0, 0, 0, 0.45);
   width: 100%;
   box-sizing: border-box;
 }
@@ -216,13 +276,6 @@ select.field {
   width: 100%;
 }
 
-a {
-  color: var(--blue-soft);
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
 .nav-link {
   margin-right: 14px;
 }
@@ -428,14 +481,11 @@ a:hover {
     #0c0c10 60%,
     #000 100%
   );
-  box-shadow:
-    inset -8px -10px 22px rgba(0, 0, 0, 0.7),
-    inset 6px 7px 16px rgba(255, 255, 255, 0.18),
-    0 8px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: inset -8px -10px 22px rgba(0, 0, 0, 0.7),
+    inset 6px 7px 16px rgba(255, 255, 255, 0.18), 0 8px 18px rgba(0, 0, 0, 0.5);
 }
 .poolball.nine {
-  background:
-    linear-gradient(
+  background: linear-gradient(
       180deg,
       transparent 0%,
       transparent 30%,
@@ -445,179 +495,16 @@ a:hover {
       transparent 100%
     ),
     radial-gradient(circle at 34% 30%, #ffffff 0%, #d8d8d8 65%, #b8b8b8 100%);
-  box-shadow:
-    inset -8px -10px 22px rgba(0, 0, 0, 0.35),
-    inset 6px 7px 16px rgba(255, 255, 255, 0.5),
-    0 8px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: inset -8px -10px 22px rgba(0, 0, 0, 0.35),
+    inset 6px 7px 16px rgba(255, 255, 255, 0.5), 0 8px 18px rgba(0, 0, 0, 0.5);
 }
 
-/* ---- Landing page ---- */
-.landing {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  min-height: 100vh;
-  margin: 0;
-  background: radial-gradient(
-    120% 90% at 50% 0%,
-    #0a0d18 0%,
-    #05060c 55%,
-    #000 100%
-  );
-}
-.landing-bar {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 28px 40px 20px;
-}
-.landing-bar-actions {
-  display: flex;
-  gap: 10px;
-}
-.landing-hero {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 90px 24px 80px;
-}
-.landing-tagline {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 30px;
-  letter-spacing: 1px;
-  margin: 16px 0 10px;
-}
-.landing-sub {
-  max-width: 460px;
-  margin: 0 auto;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-.ghost {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.5;
-}
-.g8 {
-  width: 360px;
-  height: 360px;
-  left: -80px;
-  bottom: -90px;
-  background: radial-gradient(
-    circle at 34% 30%,
-    #2a2a33 0%,
-    #0c0c10 60%,
-    #000 100%
-  );
-  box-shadow:
-    inset -22px -24px 56px rgba(0, 0, 0, 0.7),
-    inset 14px 16px 40px rgba(120, 150, 255, 0.08);
-  animation: drift8 16s ease-in-out infinite;
-}
-.g8::after {
-  content: "8";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: rgba(234, 240, 246, 0.08);
-  color: rgba(234, 240, 246, 0.22);
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.g9 {
-  width: 280px;
-  height: 280px;
-  right: -60px;
-  top: -60px;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      transparent 34%,
-      rgba(244, 197, 66, 0.5) 34%,
-      rgba(244, 197, 66, 0.5) 66%,
-      transparent 66%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle at 34% 30%,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0.18) 55%,
-      transparent 78%
-    );
-  box-shadow:
-    inset -16px -18px 44px rgba(0, 0, 0, 0.4),
-    inset 10px 12px 34px rgba(255, 255, 255, 0.12);
-  animation: drift9 13s ease-in-out infinite;
-}
-.g9::after {
-  content: "9";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  color: rgba(40, 40, 40, 0.5);
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@keyframes drift8 {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(40px, -30px) rotate(8deg);
-  }
-}
-@keyframes drift9 {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-34px, 36px) rotate(-10deg);
-  }
-}
-
-@media (max-width: 640px) {
-  .g8 {
-    width: 240px;
-    height: 240px;
-  }
-  .g9 {
-    width: 190px;
-    height: 190px;
-  }
-  .landing-hero {
-    padding: 70px 20px 60px;
-  }
-  .landing-bar {
-    padding: 16px 20px;
-  }
-}
+/* ---- App footer ---- */
 .footer {
   border-top: 1px solid var(--line);
   margin-top: 40px;
   padding: 24px;
+  background: #0e0616;
 }
 .footer-inner {
   max-width: 1000px;
@@ -654,32 +541,4 @@ a:hover {
     flex-direction: column;
     text-align: center;
   }
-}
-
-/* ---- Mobile (≤600px) ---- */
-@media (max-width: 600px) {
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-  .landing-bar {
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 14px 16px;
-    gap: 10px;
-  }
-  .landing-bar img {
-    height: 46px;
-    max-width: 70%;
-  }
-  .landing-bar-actions {
-    width: 100%;
-    justify-content: center;
-    gap: 10px;
-  }
-}
-
-html,
-body {
-  overflow-x: hidden;
 }

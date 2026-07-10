@@ -45,7 +45,7 @@ function RecordCards({
                   flex: 1,
                   height: 22,
                   borderRadius: 3,
-                  background: won ? "var(--blue-soft)" : "rgba(255,77,87,0.4)",
+                  background: won ? "#22E4FF" : "rgba(255,77,87,0.4)",
                 }}
               />
             ))}
@@ -55,7 +55,7 @@ function RecordCards({
         <div className="label">Current streak</div>
         <div
           className="stat-big"
-          style={{ color: stats.streakType === "W" ? "#3ddc84" : "#ff4d57" }}
+          style={{ color: stats.streakType === "W" ? "#22E4FF" : "#ff4d57" }}
         >
           {stats.streakType}
           {stats.streakCount}
@@ -220,8 +220,7 @@ export default async function Dashboard({
       ) : (
         <div className="card" style={{ borderColor: "rgba(77,107,255,0.4)" }}>
           <span className="muted">
-            {daysLeft} day{daysLeft === 1 ? "" : "s"} left in your free
-            trial.{" "}
+            {daysLeft} day{daysLeft === 1 ? "" : "s"} left in your free trial.{" "}
           </span>
           <a href="/pricing">Upgrade →</a>
         </div>
