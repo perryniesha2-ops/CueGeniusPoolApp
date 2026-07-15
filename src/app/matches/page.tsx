@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import MatchForm from "./MatchForm";
-import MatchRow from "./MatchRow";
+import MatchHistory from "./MatchHistory";
 import type { Match } from "@/lib/ratings";
 import type { Player } from "@/lib/types";
 import { hasProAccess } from "@/lib/access";
@@ -73,14 +73,7 @@ export default async function MatchesPage({
       <div className="section-title" style={{ marginTop: 28 }}>
         Match history
       </div>
-      {!matches?.length && (
-        <p className="muted">No matches yet. Log your first above.</p>
-      )}
-      <div className="match-grid">
-        {matches?.map((m) => (
-          <MatchRow key={m.id} m={m} />
-        ))}
-      </div>
+      <MatchHistory matches={matches ?? []} />
     </main>
   );
 }
