@@ -36,7 +36,7 @@ export default function MatchForm({ players }: { players: Player[] }) {
 
       <input
         name="opponent_name"
-        placeholder="Opponent name"
+        placeholder="Opponent name (optional)"
         className="field"
       />
       <input
@@ -44,7 +44,9 @@ export default function MatchForm({ players }: { players: Player[] }) {
         type="number"
         className="field"
         placeholder={
-          system === "fargo" ? "Opponent Fargo rating" : "Opponent skill level"
+          system === "fargo"
+            ? "Opponent Fargo rating"
+            : "Opponent skill level (optional)"
         }
       />
 
@@ -57,17 +59,10 @@ export default function MatchForm({ players }: { players: Player[] }) {
             placeholder="Total innings (from scoresheet)"
             className="field"
           />
-
           <input
             name="safeties"
             type="number"
-            placeholder="Your safeties"
-            className="field"
-          />
-          <input
-            name="opp_safeties"
-            type="number"
-            placeholder="Opponent's safeties"
+            placeholder="Your safeties (optional)"
             className="field"
           />
           <input
@@ -89,7 +84,6 @@ export default function MatchForm({ players }: { players: Player[] }) {
             placeholder="Points you earned"
             className="field"
           />
-
           <input
             name="innings"
             type="number"
@@ -109,7 +103,6 @@ export default function MatchForm({ players }: { players: Player[] }) {
             placeholder="Games you won"
             className="field"
           />
-
           <input
             name="fargo_lost"
             type="number"

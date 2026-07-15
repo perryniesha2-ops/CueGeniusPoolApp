@@ -1,5 +1,8 @@
 import type { MatchInput, FargoResult } from "./types";
 
+const ROBUSTNESS_THRESHOLD = 200;
+
+
 // Chance the player (rating R) wins a single game vs an opponent (rating O).
 // FargoRate is logarithmic: a 100-point gap predicts a 2-to-1 game ratio.
 export function gameWinProbability(
@@ -28,6 +31,7 @@ export function fargoPerformance(matches: MatchInput[]): FargoResult | null {
 
   if (totalGames === 0) return null;
   const avgOpp = opponents.reduce((a, b) => a + b, 0) / opponents.length;
+  const established = totalGames >= ROBUSTNESS_THRESHOLD;
 
   // A perfect or winless record has no exact solution, so we estimate.
   if (gamesWon === 0)
@@ -36,6 +40,8 @@ export function fargoPerformance(matches: MatchInput[]): FargoResult | null {
       games: totalGames,
       avgOpponent: Math.round(avgOpp),
       capped: true,
+      robustness: totalGames,
+      established,
     };
   if (gamesWon === totalGames)
     return {
@@ -43,6 +49,8 @@ export function fargoPerformance(matches: MatchInput[]): FargoResult | null {
       games: totalGames,
       avgOpponent: Math.round(avgOpp),
       capped: true,
+      robustness: totalGames,
+      established,
     };
 
   // Find the rating whose expected wins match the player's actual wins.
@@ -63,8 +71,11 @@ export function fargoPerformance(matches: MatchInput[]): FargoResult | null {
     games: totalGames,
     avgOpponent: Math.round(avgOpp),
     capped: false,
+    robustness: totalGames,
+    established,
   };
 }
+
 
 // The performance rating recomputed after each match — the rating's path over time.
 export function fargoRatingSeries(matches: MatchInput[]): number[] {
