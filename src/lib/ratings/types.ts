@@ -14,6 +14,8 @@ export interface MatchInput {
   points_earned: number | null;
   opp_safeties: number | null;
   played_at: string | null;
+  defensive_shots?: number;
+  defensiveShots?: number;
 }
 
 export interface ApaResult {

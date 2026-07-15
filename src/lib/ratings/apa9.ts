@@ -1,7 +1,5 @@
 import type { MatchInput, ApaResult } from "./types";
 
-// Average points-per-inning thresholds for each 9-ball skill level.
-// Reverse-engineered approximation — calibrate against known players.
 const PPI_BANDS: { sl: number; min: number }[] = [
   { sl: 9, min: 4.6 },
   { sl: 8, min: 4.2 },
@@ -14,14 +12,22 @@ const PPI_BANDS: { sl: number; min: number }[] = [
   { sl: 1, min: 0 },
 ];
 
-// One match's points per inning.
+/**
+ * Optional defensive-shot adjustment.
+ *
+ * If defensive shots are not supplied,
+ * falls back to raw innings.
+ */
 export function apa9PPI(m: MatchInput): number {
   const innings = Math.max(1, m.innings ?? 0);
-  const points = m.points_earned ?? 0;
-  return points / innings;
+
+  const defensiveShots = m.defensive_shots ?? m.defensiveShots ?? 0;
+
+  const adjustedInnings = Math.max(1, innings - defensiveShots * 0.5);
+
+  return (m.points_earned ?? 0) / adjustedInnings;
 }
 
-// Map an average PPI onto a raw skill level (1–9).
 export function ppiToSkillLevel(ppi: number): number {
   for (const band of PPI_BANDS) {
     if (ppi >= band.min) return band.sl;
@@ -29,35 +35,82 @@ export function ppiToSkillLevel(ppi: number): number {
   return 1;
 }
 
-// Estimate performance SL, anchored to the player's current SL so a small,
-// noisy sample can't overreact. Averages the player's BEST games (top 7 of
-// the window) to mirror the APA's "rate your ceiling" philosophy.
+/**
+ * Returns a fractional SL.
+ *
+ * Example:
+ * 3.7 PPI may become 6.75 instead of
+ * instantly jumping from 6 to 7.
+ */
+export function ppiToFractionalSL(ppi: number): number {
+  for (let i = 0; i < PPI_BANDS.length - 1; i++) {
+    const upper = PPI_BANDS[i];
+    const lower = PPI_BANDS[i + 1];
+
+    if (ppi >= lower.min && ppi < upper.min) {
+      const pct = (ppi - lower.min) / (upper.min - lower.min);
+
+      return lower.sl + pct;
+    }
+  }
+
+  return ppi >= PPI_BANDS[0].min ? 9 : 1;
+}
+
 export function apa9Performance(
   matches: MatchInput[],
   currentSL: number,
 ): ApaResult | null {
   const nine = matches.filter((m) => m.system === "apa9");
-  if (nine.length === 0) return null;
 
-  // Best games first, take the top 7 (or fewer if the window is small).
+  if (nine.length === 0) {
+    return null;
+  }
+
   const ppis = nine.map(apa9PPI).sort((a, b) => b - a);
-  const best = ppis.slice(0, 7);
-  const avgPPI = best.reduce((a, b) => a + b, 0) / best.length;
 
-  const computedSL = ppiToSkillLevel(avgPPI);
+  /**
+   * Ceiling sample:
+   * Top 10 performances.
+   */
+  const topTen = ppis.slice(0, 10);
 
-  // Confidence grows with sample size, capped so we never fully drop the anchor.
-  const w = Math.min(nine.length / 10, 1) * 0.7;
-  const blended = currentSL * (1 - w) + computedSL * w;
+  /**
+   * Weighted ceiling average.
+   *
+   * Best match gets largest weight.
+   */
+  const weightedPPI = topTen.reduce((sum, ppi, idx) => {
+    const weight = topTen.length - idx;
+    return sum + ppi * weight;
+  }, 0);
+
+  const totalWeight = topTen.reduce(
+    (sum, _, idx) => sum + (topTen.length - idx),
+    0,
+  );
+
+  const avgPPI = weightedPPI / totalWeight;
+
+  const computedSL = ppiToFractionalSL(avgPPI);
+
+  /**
+   * Confidence grows with sample size.
+   *
+   * 0 matches => 0%
+   * 10+ matches => 70%
+   */
+  const confidence = Math.min(nine.length / 10, 1) * 0.7;
+
+  const blended = currentSL * (1 - confidence) + computedSL * confidence;
 
   return {
     skillLevel: Math.round(blended),
-    avgScore: Math.round(avgPPI * 100) / 100, // now reads as PPI
+    avgScore: Number(avgPPI.toFixed(2)),
     sampleSize: nine.length,
   };
 }
 
-// The PPI series for the trend line (chronological order in, as given).
 export function apa9ScoreSeries(matches: MatchInput[]): number[] {
   return matches.filter((m) => m.system === "apa9").map(apa9PPI);
 }
