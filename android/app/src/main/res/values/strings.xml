@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CueGenius</string>
+    <string name="title_activity_main">CueGenius</string>
+    <string name="package_name">app.synthqa.cuegenius</string>
+    <string name="custom_url_scheme">app.synthqa.cuegenius</string>
+</resources>
