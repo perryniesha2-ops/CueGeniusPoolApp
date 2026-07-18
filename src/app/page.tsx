@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "CueGenius — Smash the rack. Track the damage.",
     description:
       "Pool performance tracking with PPI scoring, inning-by-inning logging, and 12-week trend curves.",
-    url: "https://www.cuegenius.synthqa.app",
+    url: "https://www.cuegenius.synthqatech.com",
     siteName: "CueGenius",
     type: "website",
   },
