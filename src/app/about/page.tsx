@@ -61,7 +61,7 @@ export default function AboutPage() {
       </div>
 
       <p className="muted" style={{ fontSize: 13, marginTop: 20 }}>
-        © {new Date().getFullYear()} SynthQA LLC. All rights reserved.
+        © {new Date().getFullYear()} CueGenius is a product of SynthQA. 
       </p>
     </main>
   );
