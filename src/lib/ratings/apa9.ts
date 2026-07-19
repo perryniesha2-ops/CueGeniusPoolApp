@@ -1,16 +1,19 @@
 import type { MatchInput, ApaResult } from "./types";
 
 const PPI_BANDS: { sl: number; min: number }[] = [
-  { sl: 9, min: 4.6 },
-  { sl: 8, min: 4.2 },
-  { sl: 7, min: 3.8 },
-  { sl: 6, min: 3.4 },
-  { sl: 5, min: 3.0 },
-  { sl: 4, min: 2.6 },
-  { sl: 3, min: 2.2 },
-  { sl: 2, min: 1.7 },
+  { sl: 9, min: 2.8 },
+  { sl: 8, min: 2.4 },
+  { sl: 7, min: 2.02 },
+  { sl: 6, min: 1.68 },
+  { sl: 5, min: 1.38 },
+  { sl: 4, min: 1.12 },
+  { sl: 3, min: 0.88 },
+  { sl: 2, min: 0.66 },
   { sl: 1, min: 0 },
 ];
+
+const MAX_PPI = 3.5;
+
 
 /**
  * Optional defensive-shot adjustment.
@@ -20,12 +23,10 @@ const PPI_BANDS: { sl: number; min: number }[] = [
  */
 export function apa9PPI(m: MatchInput): number {
   const innings = Math.max(1, m.innings ?? 0);
-
   const defensiveShots = m.defensive_shots ?? m.defensiveShots ?? 0;
-
   const adjustedInnings = Math.max(1, innings - defensiveShots * 0.5);
-
-  return (m.points_earned ?? 0) / adjustedInnings;
+  const ppi = (m.points_earned ?? 0) / adjustedInnings;
+  return Math.min(ppi, MAX_PPI); // cap flukey short matches
 }
 
 export function ppiToSkillLevel(ppi: number): number {
@@ -46,14 +47,11 @@ export function ppiToFractionalSL(ppi: number): number {
   for (let i = 0; i < PPI_BANDS.length - 1; i++) {
     const upper = PPI_BANDS[i];
     const lower = PPI_BANDS[i + 1];
-
     if (ppi >= lower.min && ppi < upper.min) {
       const pct = (ppi - lower.min) / (upper.min - lower.min);
-
       return lower.sl + pct;
     }
   }
-
   return ppi >= PPI_BANDS[0].min ? 9 : 1;
 }
 

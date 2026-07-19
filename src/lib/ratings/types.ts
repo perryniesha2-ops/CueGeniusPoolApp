@@ -29,6 +29,9 @@ export interface FargoResult {
   games: number;
   avgOpponent: number;
   capped: boolean;
+  robustness: number; 
+  established: boolean;
+
 }
 
 export interface Match {
