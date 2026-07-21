@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cuegenius.synthqa.app"),
+  metadataBase: new URL("https://cuegenius.synthqatech.com"),
   title: {
     default: "CueGenius — Pool League Performance Tracker",
     template: "%s · CueGenius",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   creator: "SynthQA",
   openGraph: {
     type: "website",
-    url: "https://cuegenius.synthqa.app",
+    url: "https://cuegenius.synthqatech.com",
     siteName: "CueGenius",
     title: "CueGenius — Know how you're really playing",
     description:

@@ -17,6 +17,7 @@ import type { Player } from "@/lib/types";
 import Sparkline from "./Sparkline";
 import PoolBall from "./PoolBall";
 import { hasProAccess, trialDaysLeft } from "@/lib/access";
+import InsightsCard from "./InsightsCard";
 
 // Shared record + streak + W/L bar cards (same for every system).
 function RecordCards({
@@ -235,6 +236,9 @@ export default async function Dashboard({
         <a href="/team" className="btn btn-accent">
           Teams &amp; players
         </a>
+        <a href="/head-to-head" className="btn btn-accent">
+  Head to head
+</a>
       </div>
 
       {needsSetup && (
@@ -274,7 +278,19 @@ export default async function Dashboard({
       )}
 
       {/* One upgrade prompt for non-pro users who actually have matches. */}
+      
       {!pro && hasAnyResult && <UpgradePrompt />}
+
+      {pro && (
+  <InsightsCard
+    matches={all}
+    ownRatings={{
+      apa8: player?.apa8_sl ?? null,
+      apa9: player?.apa9_sl ?? null,
+      fargo: player?.fargo_rating ?? null,
+    }}
+  />
+)}
 
       {/* ---- APA 8-BALL ---- */}
       {apaResult && (

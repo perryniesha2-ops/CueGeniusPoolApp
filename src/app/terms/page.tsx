@@ -104,7 +104,7 @@ export default function TermsPage() {
 
       <Section title="11. Contact">
         Questions about these Terms? Reach us at{" "}
-        <a href="mailto:cuegenius@synthqa.app">cuegenius@synthqa.app</a> or
+        <a href="mailto:cuegenius@synthqatech.com">cuegenius@synthqatech.com</a> or
         through our <a href="/contact">contact page</a>.
       </Section>
 
