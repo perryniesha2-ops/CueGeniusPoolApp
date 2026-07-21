@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "CueGenius",
   webDir: "public",
   server: {
-    url: "https://www.cuegenius.synthqa.app",
+    url: "https://www.cuegenius.synthqatech.com",
     cleartext: false,
   },
 };

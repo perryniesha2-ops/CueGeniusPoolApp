@@ -235,6 +235,9 @@ export default async function Dashboard({
         <a href="/team" className="btn btn-accent">
           Teams &amp; players
         </a>
+        <a href="/head-to-head" className="btn btn-accent">
+  Head to head
+</a>
       </div>
 
       {needsSetup && (
